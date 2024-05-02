@@ -1,6 +1,10 @@
 #include "TOTVS.CH"
 #include "FWMVCDEF.CH"
 
+
+/* Font para o Protheus para um Comissionamento Escalonado
+ */
+
 /*/{Protheus.doc} MVCPERC
 ********************MVCSZ9MODELO3************************
 
@@ -119,8 +123,8 @@ User Function VldDT(INI , FIM) // VALIDA DATA INICIAL E FINAL
 	ENDIF
 Return lRet
 
-/*/{Protheus.doc} VldEdt
-********************VldEdt************************
+/*/{Protheus.doc} VldEdT
+********************VldEdT************************
 /*/
 User Function VldEdT(INI) // mes e ano inicial menor que o atual  porem acesso adm pode
 
@@ -146,7 +150,7 @@ Return lRet
 
 
 /*/{Protheus.doc} VldPos
-********************Validaçoes************************
+********************VldPos************************
 /*/
 User Function VldPos(CodVenD, INI, FIM) // VALIDAÇÕES POSITIVAS PARA NA PERMITIR OUTRO CADASTRO NO INTERAVALO DE TEMPO
 	Local lRet := .T.
