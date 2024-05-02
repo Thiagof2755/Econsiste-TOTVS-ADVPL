@@ -3,6 +3,8 @@
 
 /*/{Protheus.doc} MVCPERC
 ********************MVCSZ9MODELO3************************
+
+		Teste commit
 /*/
 User Function MVCPERC()
 	Local aArea := GetArea()
