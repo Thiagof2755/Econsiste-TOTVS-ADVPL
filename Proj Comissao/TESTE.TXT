@@ -1,0 +1,83 @@
+#include "TOTVS.CH"
+#include "FWMVCDEF.CH"
+
+/*/{Protheus.doc} MVCPERC
+********************MVCSZ9MODELO3************************
+/*/
+User Function MVCPERC()
+	Local aArea := GetArea()
+	Local oBrowse
+	oBrowse:= FwmBrowse():New()
+	oBrowse:SetAlias("SZ9")
+	oBrowse:SetDescription("Cadastro de Comissão")
+	oBrowse:Activate()
+	RestArea(aArea)
+
+Return
+
+/*/{Protheus.doc} ModelDef
+********************MVCSZ9MODELO3************************
+/*/
+Static Function ModelDef()
+	Local oModel :=  Nil
+	
+	Local oStPaiZ9 := FWFormStruct(1,"SZ9")
+	Local oStFilhoZ8 := FWFormStruct(1,"SZ8")
+	oModel := MPFormModel():New("MVCPERCC" ,,,,) /* MPFORMMODEL():New(< cID >, < bPre >, < bPost >, < bCommit >, < bCancel >)-> NIL */
+	oStFilhoZ8:SetProperty("Z8_CODVEN",MODEL_FIELD_OBRIGAT,.F.)
+	oModel:AddFields("SZ9MASTER",,oStPaiZ9)
+	oModel:AddGrid("SZ8DETAL","SZ9MASTER",oStFilhoZ8)
+	oModel:SetRelation("SZ8DETAL",{{"Z8_FILIAL","xFilial('SZ9')"},{"Z8_CODVEN","Z9_CODVEN"}})// Grid que Relaciona
+	oModel:SetPrimaryKey({"Z8_FILIAL","Z8_CODVEN","Z8_PERC"})//Chave primária
+	oModel:GetModel("SZ8DETAL"):SetUniqueLine({"Z8_CODVEN","Z8_PERC"})//Combinação de campos que nao podem se repetir
+	oModel:SetDescription("Comissao") //Atribuindo a descrição ao modelo de dados
+	oModel:GetModel("SZ8DETAL"):SetDescription("Itens") //Atribuindo a descrição ao modelo de dados
+	oModel:GetModel("SZ9MASTER"):SetDescription("Cabecalho") //Atribuindo a descrição ao modelo de dados
+
+Return oModel
+
+/*/{Protheus.doc} ViewDef
+********************MVCSZ9MODELO3************************
+/*/
+Static Function ViewDef()
+
+	Local oView := Nil
+	Local oModel := FWLoadModel("MVCPERC")
+	Local oStPaiZ9 := FWFormStruct(2,"SZ9")
+	Local oStFilhoZ8 := FWFormStruct(2,"SZ8")
+	oStFilhoZ8:RemoveField("Z8_CODVEN")
+	oView := FWFormView():New()
+	oView:SetModel(oModel)
+	oView:AddField("ViewZ3",oStPaiZ9,"SZ9MASTER")
+	oView:AddGrid("ViewZ4",oStFilhoZ8,"SZ8DETAL")
+	// Criando os Box
+	oView:CreateHorizontalBox("CABEC",30)
+	oView:CreateHorizontalBox("GRID",70)
+	oView:SetCloseOnOk({||.T.})//Fecha a tela ao clicar no botão OK
+	//Amarro os campos ao Box
+	oView:SetOwnerView("ViewZ3","CABEC")//Cabeçalho
+	oView:SetOwnerView("ViewZ4","GRID")//Grid
+	oView:EnableTitleView("ViewZ3","Vendedor")//Cabeçalho
+	oView:EnableTitleView("ViewZ4","Percentual")//Grid
+
+Return  oView
+
+/*/{Protheus.doc} MenuDef
+********************MenuDef************************
+/*/
+Static Function MenuDef()
+	local aRotina     := FWMVCMenu("MVCPERC")
+Return aRotina
+
+/*/{Protheus.doc} RELATT
+********************u_RELATT************************
+/*/
+User Function RELATT()
+    private oReport
+    private cPerg := "Imprimir Dados da Turma "
+    Pergunte(cPerg,.T.)
+	ReportDef()
+	oReport:PrintDialog()
+Return
+
+

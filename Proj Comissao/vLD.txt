@@ -1,0 +1,40 @@
+
+//Função que faz a validação da grid
+Static Function fValidGrid(oModel)
+	Local lRet     := .T.
+	Local nDeletados := 0
+	Local nLinAtual :=0
+	Local oModelGRID := oModel:GetModel('MdGridZAF')
+	Local oModelMain := oModel:GetModel('MdFieldZAF')
+	Local nValorMain := oModelMain:GetValue("ZAF_VALOR")
+	Local nValorGrid := 0
+	Local cPictVlr   := PesqPict('ZAF', 'ZAF_VALOR')
+
+	//Percorrendo todos os itens da grid
+	For nLinAtual := 1 To oModelGRID:Length()
+		//Posiciona na linha
+		oModelGRID:GoLine(nLinAtual)
+
+		//Se a linha for excluida, incrementa a variável de deletados, senão irá incrementar o valor digitado em um campo na grid
+		If oModelGRID:IsDeleted()
+			nDeletados++
+		Else
+			nValorGrid += NoRound(oModelGRID:GetValue("ZAF_TCOMB"), 4)
+		EndIf
+	Next nLinAtual
+
+	//Se o tamanho da Grid for igual ao número de itens deletados, acusa uma falha
+	If oModelGRID:Length()==nDeletados
+		lRet :=.F.
+		Help( , , 'Dados Inválidos' , , 'A grid precisa ter pelo menos 1 linha sem ser excluida!', 1, 0, , , , , , {"Inclua uma linha válida!"})
+	EndIf
+
+	If lRet
+		//Se o valor digitado no cabeçalho (valor da NF), não bater com o valor de todos os abastecimentos digitados (valor dos itens da Grid), irá mostrar uma mensagem alertando, porém irá permitir salvar (do contrário, seria necessário alterar lRet para falso)
+		If nValorMain != nValorGrid
+			//lRet := .F.
+			MsgAlert("O valor do cabeçalho (" + Alltrim(Transform(nValorMain, cPictVlr)) + ") tem que ser igual o valor dos itens (" + Alltrim(Transform(nValorGrid, cPictVlr)) + ")!", "Atenção")
+		EndIf
+	EndIf
+
+Return lRet
