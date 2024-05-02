@@ -109,7 +109,7 @@ User Function VldDT(INI , FIM) // VALIDA DATA INICIAL E FINAL
 	Local lRet := .T.
 
 	IF !EMPTY(FIM) .AND. INI > FIM
-		
+
 		MsgInfo(" Inicial maior que Final. Verifique!")
 		lRet := .F.
 	ENDIF
@@ -134,11 +134,13 @@ User Function VldEdT(INI) // mes e ano inicial menor que o atual  porem acesso a
 	IF INI < dData .AND. !EMPTY(INI)  //mes e ano inicial menor que o atual
 		lRet := .F.
 	ENDIF
-
-	/*IF NivelUser("6") // verifica se o acesso e do administrador
+	If !(FWIsAdmin( __cUserID ) )
+		MsgStop(' O usuário ' + __cUserID + ' não pertence ao grupo de administradores!')
+		lRet := .F.
+	ELSE 
+		MsgInfo(' O usuário ' + __cUserID + ' pertence ao grupo de administradores!')
 		lRet := .T.
-	ENDIF*/ __cuserid
-
+	ENDIF
 	FWRestArea(aArea)
 Return lRet
 
@@ -168,27 +170,23 @@ Return  lRet
 
 /*/{Protheus.doc} fValGridCB8
 Função de pre-validação da edição de linha CB8Detail
-@type function
-@version 12.1.33
-@author rafael
-@since 24/08/2022
 /*/
 Static Function fValGridCB8(oGridModel, nLine, cAction, cIDField, xValue, xCurrentValue)
-	Local lRet := .T.   
-	
+	Local lRet := .T.
+
 	Local nI := 0
 	Local nLinAtu := oGridModel:nLine
 
-	IF !oGridModel:IsDeleted() 
+	IF !oGridModel:IsDeleted()
 		nVlrIniAtual := oGridModel:GetValue("Z8_CINI")
 
 		for nI := 1 to oGridModel:Length()
 			if nI < nLinAtu
 				oGridModel:GoLine(nI)
-				if !oGridModel:IsDeleted() 
+				if !oGridModel:IsDeleted()
 					if nVlrIniAtual <= oGridModel:GetValue("Z8_CFIM")
 						MsgStop("Valor informado na Faixa Inicial ("+cValtoChar(nVlrIniAtual)+") é menor que o valor final ("+cValtoChar(oGridModel:GetValue("Z8_CFIM"))+") da linha ";
-						+cValtoChar(nI)+". Verifique!")
+							+cValtoChar(nI)+". Verifique!")
 						lRet := .F.
 						exit
 					endif
@@ -203,22 +201,19 @@ Static Function fValGridCB8(oGridModel, nLine, cAction, cIDField, xValue, xCurre
 Return lRet
 
 /*/{Protheus.doc} Calculo
-Função que realiza o calculo do total agregado
-@type function	
-@version  12
-@author rafae
-@since 06/12/2021
+Função de pre-validação da edição de linha CB8Detail
+
 /*/
 static function Calculo( oModel, nTotalAtual, xValor, lSomando )
 	local nRet := 0
 	Local oModelGrid	:= oModel:GetModel("SZHDETAIL")
 	Local nI := 0
-	Local nLinAtu := oModelGrid:nLine 
+	Local nLinAtu := oModelGrid:nLine
 	if lSomando
 		for nI := 1 to oModelGrid:Length()
 			oModelGrid:GoLine(nI)
-			if !oModelGrid:IsDeleted() .and. oModelGrid:GetValue("ZH_AGREGA") 
-				nRet += oModelGrid:GetValue("ZH_QUANT") 
+			if !oModelGrid:IsDeleted() .and. oModelGrid:GetValue("ZH_AGREGA")
+				nRet += oModelGrid:GetValue("ZH_QUANT")
 			endif
 		Next
 		oModelGrid:GoLine(nLinAtu)
@@ -227,6 +222,11 @@ static function Calculo( oModel, nTotalAtual, xValor, lSomando )
 	endif
 
 Return  nRet
+
+
+/*/{Protheus.doc} fValVlr
+Função de validação da edição de linha CB8Detail
+/*/
 Static Function fValVlr()
 	local lRet := .t.
 	Local oModel 		:= FWModelActive()
