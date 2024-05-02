@@ -134,9 +134,11 @@ User Function VldEdT(INI) // mes e ano inicial menor que o atual  porem acesso a
 	IF INI < dData .AND. !EMPTY(INI)  //mes e ano inicial menor que o atual
 		lRet := .F.
 	ENDIF
-	IF NivelUser("6") // verifica se o acesso e do administrador
+
+	/*IF NivelUser("6") // verifica se o acesso e do administrador
 		lRet := .T.
-	ENDIF
+	ENDIF*/ __cuserid
+
 	FWRestArea(aArea)
 Return lRet
 
