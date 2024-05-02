@@ -126,6 +126,8 @@ User Function VldEdT(INI) // mes e ano inicial menor que o atual  porem acesso a
 
 	Local lRet := .T.
 
+	Local xConteud := GetNewPar("MV_X_ADM",,)
+
 	Local aArea     := FWGetArea()
 	Local dData
 	//Busca a data de hoje
@@ -133,12 +135,10 @@ User Function VldEdT(INI) // mes e ano inicial menor que o atual  porem acesso a
 
 	IF INI < dData .AND. !EMPTY(INI)  //mes e ano inicial menor que o atual
 		lRet := .F.
+		MsgStop("Mes e ano inicial menor que o atual. Verifique Com Administrador!")
 	ENDIF
-	If !(FWIsAdmin( __cUserID ) )
-		MsgStop(' O usuário ' + __cUserID + ' não pertence ao grupo de administradores!')
-		lRet := .F.
-	ELSE 
-		MsgInfo(' O usuário ' + __cUserID + ' pertence ao grupo de administradores!')
+	//verifica se o acesso e administrador
+	IF __cUserId $ xConteud
 		lRet := .T.
 	ENDIF
 	FWRestArea(aArea)
@@ -151,19 +151,28 @@ Return lRet
 User Function VldPos(CodVenD, INI, FIM) // VALIDAÇÕES POSITIVAS PARA NA PERMITIR OUTRO CADASTRO NO INTERAVALO DE TEMPO
 	Local lRet := .T.
 	Local cAlias := GetNextAlias()
+	// Local oModel 		:= FWModelActive()
+	LOCAL nRecSZ9 := SZ9->(RECNO())
 
-	BeginSql Alias cAlias
-        SELECT Z9_CODVEN FROM %table:SZ9% 
-        WHERE Z9_CODVEN = %exp:CodVenD% AND %notDel% 
-            AND (%exp:INI% BETWEEN Z9_DTINI AND Z9_DTFIM)
-			OR  (%exp:FIM% BETWEEN Z9_DTINI AND Z9_DTFIM)
+	IF !Altera
+		nRecSZ9 := 0
+	ENDIF
 
-	EndSql
+		BeginSql Alias cAlias
+			SELECT Z9_CODVEN FROM %table:SZ9% 
+			WHERE Z9_CODVEN = %exp:CodVenD% 
+			AND %notDel% 
+			AND R_E_C_N_O_ != %exp:nRecSZ9%
+				AND ((%exp:INI% BETWEEN Z9_DTINI AND Z9_DTFIM)
+				OR  (%exp:FIM% BETWEEN Z9_DTINI AND Z9_DTFIM))
 
-	If !Empty((cAlias)->(Z9_CODVEN))
-		MsgInfo("Já existe um cadastro para este vendedor no intervalo de tempo especificado.")
-		lRet := .F.
-	EndIf
+		EndSql
+
+		If !Empty((cAlias)->(Z9_CODVEN))
+			MsgInfo("Já existe um cadastro para este vendedor no intervalo de tempo especificado.")
+			lRet := .F.
+		EndIf
+	
 
 Return  lRet
 
