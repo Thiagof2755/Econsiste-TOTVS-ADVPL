@@ -3,6 +3,7 @@
 
 /*/{Protheus.doc} MVCPERC
 ********************MVCSZ9MODELO3************************
+
 /*/
 User Function MVCPERC()
 	Local aArea := GetArea()
