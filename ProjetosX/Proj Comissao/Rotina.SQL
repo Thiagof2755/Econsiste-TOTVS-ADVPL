@@ -1,17 +1,17 @@
 SELECT
-    SZ9990.Z9_CODVEN,
+    SZ9100.Z9_CODVEN,
     SF2990.F2_VALBRUT
 FROM
-    SZ9990
+    SZ9100
     INNER JOIN SF2990 ON (
-        SZ9990.Z9_CODVEN = SF2990.F2_VEND1
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND2
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND3
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND4
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND5
+        SZ9100.Z9_CODVEN = SF2990.F2_VEND1
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND2
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND3
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND4
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND5
     )
 WHERE
-    SZ9990.Z9_CODVEN = '000001'
+    SZ9100.Z9_CODVEN = '000001'
     AND (
         F2_EMISSAO BETWEEN '20240101'
         AND '20241230'
@@ -19,16 +19,16 @@ WHERE
 SELECT
     SUM(SF2990.F2_VALBRUT) AS TOTAL_VALBRUT
 FROM
-    SZ9990
+    SZ9100
     INNER JOIN SF2990 ON (
-        SZ9990.Z9_CODVEN = SF2990.F2_VEND1
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND2
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND3
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND4
-        OR SZ9990.Z9_CODVEN = SF2990.F2_VEND5
+        SZ9100.Z9_CODVEN = SF2990.F2_VEND1
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND2
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND3
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND4
+        OR SZ9100.Z9_CODVEN = SF2990.F2_VEND5
     )
 WHERE
-    SZ9990.Z9_CODVEN = '000001'
+    SZ9100.Z9_CODVEN = '000001'
     AND (
         F2_EMISSAO BETWEEN '20240101'
         AND '20241230'
@@ -42,30 +42,30 @@ FROM
     (
         SELECT
             SUM(SF2990.F2_VALBRUT) AS TOTAL_VALBRUT,
-            SZ8990.Z8_PERC,
-            SZ8990.Z8_CINI,
-            SZ8990.Z8_CFIM,
-            SZ8990.Z8_CODVEN
+            SZ8100.Z8_PERC,
+            SZ8100.Z8_CINI,
+            SZ8100.Z8_CFIM,
+            SZ8100.Z8_CODVEN
         FROM
-            SZ9990
+            SZ9100
             INNER JOIN SF2990 ON (
-                SZ9990.Z9_CODVEN = SF2990.F2_VEND1
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND2
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND3
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND4
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND5
+                SZ9100.Z9_CODVEN = SF2990.F2_VEND1
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND2
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND3
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND4
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND5
             )
-            INNER JOIN SZ8990 ON SZ9990.Z9_CODVEN = SZ8990.Z8_CODVEN
+            INNER JOIN SZ8100 ON SZ9100.Z9_CODVEN = SZ8100.Z8_CODVEN
         WHERE
-            SZ9990.Z9_CODVEN = '000001'
+            SZ9100.Z9_CODVEN = '000001'
             AND (
                 F2_EMISSAO BETWEEN '20240101'
                 AND '20241230'
             )
         GROUP BY
-            SZ8990.Z8_PERC,
-            SZ8990.Z8_CINI,
-            SZ8990.Z8_CFIM,
+            SZ8100.Z8_PERC,
+            SZ8100.Z8_CINI,
+            SZ8100.Z8_CFIM,
             Z8_CODVEN
     ) AS Subquery
 WHERE
@@ -81,30 +81,94 @@ FROM
     (
         SELECT
             SUM(SF2990.F2_VALBRUT) AS TOTAL_VALBRUT,
-            SZ8990.Z8_PERC,
-            SZ8990.Z8_CINI,
-            SZ8990.Z8_CFIM,
-            SZ8990.Z8_CODVEN
+            SZ8100.Z8_PERC,
+            SZ8100.Z8_CINI,
+            SZ8100.Z8_CFIM,
+            SZ8100.Z8_CODVEN
         FROM
-            SZ9990
+            SZ9100
             INNER JOIN SF2990 ON (
-                SZ9990.Z9_CODVEN = SF2990.F2_VEND1
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND2
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND3
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND4
-                OR SZ9990.Z9_CODVEN = SF2990.F2_VEND5
+                SZ9100.Z9_CODVEN = SF2990.F2_VEND1
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND2
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND3
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND4
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND5
             )
-            INNER JOIN SZ8990 ON SZ9990.Z9_CODVEN = SZ8990.Z8_CODVEN
-            AND SZ8990.Z8_CODVEN BETWEEN '000001'
+            INNER JOIN SZ8100 ON SZ9100.Z9_CODVEN = SZ8100.Z8_CODVEN
+            AND SZ8100.Z8_CODVEN BETWEEN '000001'
             AND '000005'
         WHERE
             F2_EMISSAO BETWEEN '20240101'
             AND '20241230'
         GROUP BY
-            SZ8990.Z8_PERC,
-            SZ8990.Z8_CINI,
-            SZ8990.Z8_CFIM,
-            SZ8990.Z8_CODVEN
+            SZ8100.Z8_PERC,
+            SZ8100.Z8_CINI,
+            SZ8100.Z8_CFIM,
+            SZ8100.Z8_CODVEN
     ) AS Subquery
 WHERE
-    TOTAL_VALBRUT BETWEEN Z8_CINI AND Z8_CFIM;
+    TOTAL_VALBRUT BETWEEN Z8_CINI
+    AND Z8_CFIM;
+
+
+
+
+
+
+------------------------------------------------ FINAL----------------------------------
+SELECT
+    TOTAL_VALBRUT,
+    Z8_PERC,
+    Z8_CODVEN,
+    F4_DUPLIC
+FROM
+    (
+        SELECT
+            SUM(SD2990.D2_VALBRUT) AS TOTAL_VALBRUT,
+            SZ8100.Z8_PERC,
+            SZ8100.Z8_CINI,
+            SZ8100.Z8_CFIM,
+            SZ8100.Z8_CODVEN,
+            SF4990.F4_DUPLIC
+        FROM
+            SZ9100
+            INNER JOIN SF2990 ON (
+                SZ9100.Z9_CODVEN = SF2990.F2_VEND1
+                AND SZ9100.D_E_L_E_T_ = SF2990.D_E_L_E_T_
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND2
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND3
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND4
+                OR SZ9100.Z9_CODVEN = SF2990.F2_VEND5
+            )
+            INNER JOIN SZ8100 ON (
+                SZ9100.Z9_CODVEN = SZ8100.Z8_CODVEN
+                AND SZ9100.D_E_L_E_T_ = SZ8100.D_E_L_E_T_
+            )
+            INNER JOIN SD2990 ON (
+                SD2990.D2_DOC = SF2990.F2_DOC
+                AND SD2990.D2_SERIE = SF2990.F2_SERIE
+                AND SD2990.D2_CLIENTE = SF2990.F2_CLIENTE
+                AND SD2990.D2_LOJA = SF2990.F2_LOJA
+                AND SD2990.D_E_L_E_T_ = SF2990.D_E_L_E_T_
+            )
+            INNER JOIN SF4990 ON (
+                SD2990.D2_TES = SF4990.F4_CODIGO
+                AND SD2990.D_E_L_E_T_ = SF4990.D_E_L_E_T_
+                AND SF4990.F4_DUPLIC = 'S'
+            )
+            AND SZ8100.Z8_CODVEN BETWEEN '000000'
+            AND '000400'
+        WHERE
+            F2_EMISSAO BETWEEN '20240101'
+            AND '20240131'
+            AND SZ9100.D_E_L_E_T_ = ' '
+        GROUP BY
+            SZ8100.Z8_PERC,
+            SZ8100.Z8_CINI,
+            SZ8100.Z8_CFIM,
+            SZ8100.Z8_CODVEN,
+            SF4990.F4_DUPLIC
+    ) AS Subquery
+WHERE
+    TOTAL_VALBRUT BETWEEN Z8_CINI
+    AND Z8_CFIM

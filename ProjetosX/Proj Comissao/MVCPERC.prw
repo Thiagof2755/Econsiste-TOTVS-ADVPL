@@ -7,8 +7,8 @@
 
 /*/{Protheus.doc} MVCPERC
 ********************MVCSZ9MODELO3************************
-
 /*/
+
 User Function MVCPERC()
 	Local aArea := GetArea()
 	Local oBrowse
@@ -26,7 +26,6 @@ Return
 Static Function ModelDef()
 	Local oModel :=  Nil
 	Local bLinePos := {|oGridModel, nLine, cAction, cIDField, xValue, xCurrentValue| fValGridCB8(oGridModel, nLine, cAction, cIDField, xValue, xCurrentValue)}
-
 
 	Local oStPaiZ9 := FWFormStruct(1,"SZ9") //Cria uma estrutura para o cabeçalho
 	Local oStFilhoZ8 := FWFormStruct(1,"SZ8") //Cria uma estrutura para o grid
