@@ -9,25 +9,19 @@
 
 User Function WWESTM04()
 	Local aArea     := FWGetArea()
-	Local cDirIni   := GetTempPath()
-	Local cTipArq   := 'Arquivos Excel (*.xlsx) | Arquivos Excel 97-2003 (*.xls)'
-	Local cTitulo   := 'Seleção de Arquivos para Processamento'
-	Local lSalvar   := .F.
 	Local cArqSel   := ''
 	Private cArqCSV := ""
 
+	Private cPerg 	 := "EXEL"
+
+	Pergunte(cPerg,.T.) // SE TRUE ELE CHAMA A PERGUNTA ASSIM QUE O RELATÓRIO É ACIONADO
+
+		cCod := MV_PAR01
+		cData := MV_PAR02
+		cArqSel := MV_PAR03
+
 	//Se não estiver sendo executado via job
 	If ! IsBlind()
-
-		//Chama a função para buscar arquivos
-		cArqSel := tFileDialog(;
-			cTipArq,;  // Filtragem de tipos de arquivos que serão selecionados
-		cTitulo,;  // Título da Janela para seleção dos arquivos
-		,;         // Compatibilidade
-		cDirIni,;  // Diretório inicial da busca de arquivos
-		lSalvar,;  // Se for .T., será uma Save Dialog, senão será Open Dialog
-		;          // Se não passar parâmetro, irá pegar apenas 1 arquivo; Se for informado GETF_MULTISELECT será possível pegar mais de 1 arquivo; Se for informado GETF_RETDIRECTORY será possível selecionar o diretório
-		)
 
 		//Se tiver o arquivo selecionado e ele existir
 		If ! Empty(cArqSel) .And. File(cArqSel)
@@ -170,20 +164,16 @@ Static Function fExecAuto(cLog,nLinhaAtu,aVetor)
 	//Variáveis da Importação
 	Private cAliasImp  := 'AIA_AIB'
 
-
 	lMsErroAuto := .F.
-
 
 	bVetor	:= {}
 	bVetor 	:= {{"B7_FILIAL", 	xFilial("SB7"),				Nil},;
 				{"B7_COD",		aVetor[1],					Nil},; // Deve ter o tamanho exato do campo B7_COD, pois faz parte da chave do indice 1 da SB7
 				{"B7_LOCAL",	aVetor[2],					Nil},; // Deve ter o tamanho exato do campo B7_LOCAL, pois faz parte da chave do indice 1 da SB7 //{"B7_DOC",		AllTrim(cNroDoc),			Nil},;
-				{"B7_DOC",		"0",			            Nil},;
-				{"B7_QUANT",	aVetor[3],					Nil},;
+				{"B7_DOC",		cCod,			            Nil},;
+				{"B7_QUANT",	Val(aVetor[3]),					Nil},;
 				{"B7_ESCOLHA",	"S",						Nil},;
-				{"B7_DATA",		dDataBase,					Nil} } // Deve ter o tamanho exato do campo B7_DATA, pois faz parte da chave do indice 1 da SB7
-
-
+				{"B7_DATA",		cData,					Nil} } // Deve ter o tamanho exato do campo B7_DATA, pois faz parte da chave do indice 1 da SB7
 
 	MSExecAuto({|x,y,z| mata270(x,y,z)},bVetor,.T.,3)
 
