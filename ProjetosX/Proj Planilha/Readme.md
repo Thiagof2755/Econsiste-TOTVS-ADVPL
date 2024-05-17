@@ -1,9 +1,6 @@
-Claro! Aqui está um exemplo de como você pode estruturar o seu `README.md` para o repositório no GitHub. Esse arquivo explica o propósito do script, como configurá-lo e executá-lo.
-
-
 # WWESTM04 - Excel to CSV Converter for Protheus
 
-Este repositório contém o script `WWESTM04.prw`, que é responsável por converter arquivos Excel (.xls e .xlsx) em arquivos CSV, para posterior importação no sistema Protheus da TOTVS.
+Este repositório contém o script `WWESTM04.prw`, que é responsável por converter arquivos Excel (.xls e .xlsx) em arquivos CSV, para importação no sistema Protheus da TOTVS.
 
 ## Descrição
 
