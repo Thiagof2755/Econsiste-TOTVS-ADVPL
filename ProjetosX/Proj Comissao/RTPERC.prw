@@ -131,9 +131,7 @@ Static Function FGetQuery(cVendde,cVendAte,cDtDe,cDtAte)
     cQuery +=            ') '
     cQuery +=                   'AS Subquery '
     cQuery +=            'WHERE TOTAL_VALBRUT BETWEEN Z8_CINI AND Z8_CFIM '
-
-
-
+    
 Return cQuery
 
 
