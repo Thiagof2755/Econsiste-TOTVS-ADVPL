@@ -2,7 +2,7 @@
 #INCLUDE "FWMVCDEF.CH"
 
 //-------------------------------------------------------------------
-/*/{Protheus.doc} CRMA980_PE
+/*/{Protheus.doc} STFAT09
 Fonte Para Automatizar o processo de cadastro de clientes
 com seus contatos
 @author Thiago Alves
@@ -19,7 +19,9 @@ com seus contatos
 /*/
 //-------------------------------------------------------------------
 
-User Function CRMA980_PE()
+User Function STFAT09()
+
+
 
 	Local aArea := GetArea()
 	Local oBrowse
@@ -100,26 +102,31 @@ Static Function ViewDef()
 	oView:SetOwnerView("VIEW_U5MST","VIEW_TOP")
 
 	oView:AddOtherObject("VIEW_OTHER", {|oPanel| tBtn(oPanel)})
-	oView:SetOwnerView('VIEW_OTHER' , 'VIEW_BTN')//View do Bot„o da Grid.
+	oView:SetOwnerView('VIEW_OTHER' , 'VIEW_BTN')//View do Bot√£o da Grid.
 
-	oStruMST:SetProperty("U5_CODCONT", MVC_VIEW_CANCHANGE,.F.)
-	oStruMST:SetProperty("U5_CELULAR", MVC_VIEW_CANCHANGE,.T.)
+	oStruMST:SetProperty("U5_CODCONT", 	MVC_VIEW_CANCHANGE,.F.)
+	oStruMST:SetProperty("U5_CELULAR", 	MVC_VIEW_CANCHANGE,.T.)
 	oStruMST:SetProperty("U5_FONE",  	MVC_VIEW_CANCHANGE,.T.)
-	oStruMST:SetProperty("U5_CELULAR", MVC_VIEW_ORDEM,"01")
+	oStruMST:SetProperty("U5_CELULAR",  MVC_VIEW_ORDEM,"02")
+	oStruMST:SetProperty("U5_DDD",		MVC_VIEW_ORDEM,"01")
+	oStru:SetProperty("U5_DDD", 		MVC_VIEW_CANCHANGE,.T.)
+	oStruMST:SetProperty("U5_DDD",  	MVC_VIEW_CANCHANGE,.T.)
 	oStru:SetProperty("U5_CODCONT", MVC_VIEW_CANCHANGE,.F.)
 	oStru:SetProperty("U5_CELULAR", MVC_VIEW_CANCHANGE,.T.)
 	oStru:SetProperty("U5_FONE",  	MVC_VIEW_CANCHANGE,.T.)
-	oStru:SetProperty("U5_CELULAR", MVC_VIEW_ORDEM,"01")
-	oStru:SetProperty("U5_CONTAT", 	MVC_VIEW_ORDEM,"02")
-	oStru:SetProperty("U5_CARGO", 	MVC_VIEW_ORDEM,"03")
-
+	oStru:SetProperty("U5_CELULAR", MVC_VIEW_ORDEM,"02")
+	oStru:SetProperty("U5_DDD",  	MVC_VIEW_ORDEM,"01")
+	oStru:SetProperty("U5_CONTAT", 	MVC_VIEW_ORDEM,"03")
+	oStru:SetProperty("U5_CODCONT", MVC_VIEW_ORDEM,"11")
+	oStru:SetProperty("U5_CARGO", 	MVC_VIEW_ORDEM,"04")
+	oStruMST:removeField("U5_CODCONT")
 
 
 Return oView
 
 
 Static Function MenuDef()
-	local aRotina     := FWMVCMenu("CRMA980_PE")
+	local aRotina     := FWMVCMenu("STFAT09")
 
 Return aRotina
 
@@ -256,7 +263,7 @@ Static Function AC8Relation()
 
 
 			elseif oModelGrid:IsDeleted()
-			/* Deleta o registro da tabela AC8 se for excluÌdo do grid*/
+			/* Deleta o registro da tabela AC8 se for exclu√≠do do grid*/
 				Reclock("AC8",.F.)
 				AC8->(dbdelete())
 				AC8->(MSuNLOCK())
@@ -283,21 +290,20 @@ Static Function SU5Register()
 		oModelGrid:GoLine(nI)
 		SU5->(dbsetorder(1))
 		if !SU5->(dbseek(xFilial("SU5")+oModelGrid:GetValue("U5_CODCONT")))//U5_FILIAL+U5_CODCONT
-		/* Cria o registro com base nas informaÁıes do grid */
+		/* Cria o registro com base nas informa√ß√µes do grid */
 			Identificador := NEWNUMCONT()
 			Reclock("SU5",.T.)
+			SU5->U5_FILIAL := xFilial("SU5")
 
 			For x := 1 To Len(oModelGrid:aHeader)
 
 				cCampo := ALLTRIM(oModelGrid:aHeader[x][2])
 
 				DO CASE
-				CASE cCampo == "U5_CODCONT"
-					SU5->U5_CODCONT := Identificador
-				CASE cCampo == "U5_FILIAL"
-					SU5->U5_FILIAL := (xFilial("SU5"))
-				OTHERWISE
-					SU5->&(cCampo) := oModelGrid:GetValue(cCampo)
+					CASE cCampo == "U5_CODCONT"
+						SU5->U5_CODCONT := Identificador
+					OTHERWISE
+						SU5->&(cCampo) := oModelGrid:GetValue(cCampo)
 				ENDCASE
 
 			Next
@@ -307,7 +313,7 @@ Static Function SU5Register()
 			oModel:SetValue("SU5CHILD","U5_CODCONT",Identificador)
 		/* -----------------------------------------------------*/
 		Endif
-		/* Atualiza o registro com base nas informaÁıes do grid */
+		/* Atualiza o registro com base nas informa√ß√µes do grid */
 		Reclock("SU5",.F.)
 
 		For x := 1 To Len(oModelGrid:aHeader)
@@ -338,26 +344,26 @@ Static Function GetModel()
 	Local nAtual
 	Local nI
 
-	// Adiciona um campo ‡ estrutura
+	// Adiciona um campo √† estrutura
 	For nI := 2 To Len(oStructSU5:AFIELDS)
 		Virtual := oStructSU5:AFIELDS[nI][14]
 		If  Virtual == .F.
 			oStru:AddField(;
-				oStructSU5:AFIELDS[nI][1],;  // cTitulo: TÌtulo do campo
+				oStructSU5:AFIELDS[nI][1],;  // cTitulo: T√≠tulo do campo
 			oStructSU5:AFIELDS[nI][2],;  // cTooltip: Tooltip do campo
 			oStructSU5:AFIELDS[nI][3],;  // cIdField: ID do campo
 			oStructSU5:AFIELDS[nI][4],;  // cTipo: Tipo do campo (Caracter)
 			oStructSU5:AFIELDS[nI][5],;  // nTamanho: Tamanho do campo
-			oStructSU5:AFIELDS[nI][6],; // nDecimal: Decimal do campo (0 por padr„o)
-			,;                           // bValid: Bloco de cÛdigo de validaÁ„o do campo
-			,;                           // bWhen: Bloco de cÛdigo de validaÁ„o when do campo
+			oStructSU5:AFIELDS[nI][6],; // nDecimal: Decimal do campo (0 por padr√£o)
+			,;                           // bValid: Bloco de c√≥digo de valida√ß√£o do campo
+			,;                           // bWhen: Bloco de c√≥digo de valida√ß√£o when do campo
 			,;                           // aValues: Lista de valores permitidos para o campo
-			oStructSU5:AFIELDS[nI][10],; // lObrigat: Indica se o campo È obrigatÛrio (.T. para verdadeiro)
-			,; // bInit: Bloco de cÛdigo de inicializaÁ„o do campo
-			,;                           // lKey: Indica se È um campo chave (verdadeiro/falso)
-			oStructSU5:AFIELDS[nI][13],; // lNoUpd: Indica se o campo n„o pode ser atualizado
-			,;                           // lVirtual: Indica se o campo È virtual
-			,;                           // cValid: Valid do usu·rio em formato texto
+			oStructSU5:AFIELDS[nI][10],; // lObrigat: Indica se o campo √© obrigat√≥rio (.T. para verdadeiro)
+			,; // bInit: Bloco de c√≥digo de inicializa√ß√£o do campo
+			,;                           // lKey: Indica se √© um campo chave (verdadeiro/falso)
+			oStructSU5:AFIELDS[nI][13],; // lNoUpd: Indica se o campo n√£o pode ser atualizado
+			,;                           // lVirtual: Indica se o campo √© virtual
+			,;                           // cValid: Valid do usu√°rio em formato texto
 			)
 		EndIf
 	Next
@@ -366,12 +372,12 @@ Static Function GetModel()
 		"U5_CELULAR",;                               //Campo Origem
 	"U5_CONTAT",;                               //Campo Destino
 	"u_GAT()",;                                   //Regra de Preenchimento
-	.F.,;                                       //Ir· Posicionar?
+	.F.,;                                       //Ir√° Posicionar?
 	"",;                                        //Alias de Posicionamento
-	0,;                                         //Õndice de Posicionamento
+	0,;                                         //√çndice de Posicionamento
 	'',;                                        //Chave de Posicionamento
-	NIL,;                    					//CondiÁ„o para execuÁ„o do gatilho
-	"01");                                      //SequÍncia do gatilho
+	NIL,;                    					//Condi√ß√£o para execu√ß√£o do gatilho
+	"01");                                      //Sequ√™ncia do gatilho
 	)
 
 	//Percorrendo os gatilhos e adicionando na Struct
@@ -379,8 +385,8 @@ Static Function GetModel()
 		oStru:AddTrigger( ;
 			aGatilhos[nAtual][01],; //Campo Origem
 		aGatilhos[nAtual][02],; //Campo Destino
-		aGatilhos[nAtual][03],; //Bloco de cÛdigo na validaÁ„o da execuÁ„o do gatilho
-		aGatilhos[nAtual][04];  //Bloco de cÛdigo de execuÁ„o do gatilho
+		aGatilhos[nAtual][03],; //Bloco de c√≥digo na valida√ß√£o da execu√ß√£o do gatilho
+		aGatilhos[nAtual][04];  //Bloco de c√≥digo de execu√ß√£o do gatilho
 		)
 	Next
 
@@ -391,9 +397,9 @@ Static Function GetView()
 	Local oStru := FWFormViewStruct():New()
 	Local oStructSU5 := FWFormStruct(2, "SU5")
 	Local nI
-	Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV","U5_CODCONT"}
+	Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV","U5_CODCONT","U5_DDD"}
 
-	// Adiciona um campo ‡ estrutura
+	// Adiciona um campo √† estrutura
 	For nI := 1 To Len(oStructSU5:AFIELDS)
 		Virtual := oStructSU5:AFIELDS[nI][16]
 		nCampo := oStructSU5:AFIELDS[nI][1]
@@ -402,7 +408,7 @@ Static Function GetView()
 			If AScan(aCamposPermitidos, nCampo) > 0
 				cLista := oStructSU5:AFIELDS[nI][13]
 				If nCampo == "U5_CARGO"
-					cLista := {"01=Gerente de PÛs Vendas", "02=Gerente de ServiÁo", "03=Gerente de peÁas", "04=Chefe de Oficina", "05=Comprador", "06=Consultor", "07=Vendedor", "08=Diretor", "09=Titular"}
+					cLista := {"01=Gerente de P√≥s Vendas", "02=Gerente de Servi√ßo", "03=Gerente de pe√ßas", "04=Chefe de Oficina", "05=Comprador", "06=Consultor", "07=Vendedor", "08=Diretor", "09=Titular"}
 				EndIf
 
 				oStru:AddField(oStructSU5:AFIELDS[nI][1],;      // [01]  C   Nome do Campo
@@ -412,17 +418,17 @@ Static Function GetView()
 				Nil,;                            // [05]  A   Array com Help
 				oStructSU5:AFIELDS[nI][6],;      // [06]  C   Tipo do campo
 				oStructSU5:AFIELDS[nI][7],;      // [07]  C   Picture
-				Nil,;                            // [08]  B   Bloco de PictTre Var
+				oStructSU5:AFIELDS[nI][8],;                            // [08]  B   Bloco de PictTre Var
 				Nil,;                            // [09]  C   Consulta F3
-				oStructSU5:AFIELDS[nI][10],;     // [10]  L   Indica se o campo È alteravel
+				oStructSU5:AFIELDS[nI][10],;     // [10]  L   Indica se o campo √© alteravel
 				Nil,;                            // [11]  C   Pasta do campo
 				Nil,;                            // [12]  C   Agrupamento do campo
 				cLista,;                         // [13]  A   Lista de valores permitido do campo (Combo)
-				Nil,;                            // [14]  N   Tamanho maximo da maior opÁ„o do combo
+				Nil,;                            // [14]  N   Tamanho maximo da maior op√ß√£o do combo
 				Nil,;                            // [15]  C   Inicializador de Browse
-				Nil,;                            // [16]  L   Indica se o campo È virtual
-				Nil,;                            // [17]  C   Picture Variavel
-				Nil)                             // [18]  L   Indica pulo de linha apÛs o campo
+				Nil,;                            // [16]  L   Indica se o campo √© virtual
+				oStructSU5:AFIELDS[nI][17],;                            // [17]  C   Picture Variavel
+				Nil)                             // [18]  L   Indica pulo de linha ap√≥s o campo
 			EndIf
 		EndIf
 	Next
@@ -433,51 +439,56 @@ Return oStru
 
 
 User Function GAT()
-	Local aArea    		:= GetArea()
-	Local cNome 		:= " "
-	Local cAlias 		:= GetNextAlias()
-	Local oModel 		:= FWModelActive()
-	Local oModelGrid 	:= oModel:GetModel('SU5CHILD')
-	Local cCelular 	    := oModelGrid:GetValue('U5_CELULAR' )
-	local aCols         := oModelGrid:aHeader
-	local nCampos       := {}
-	local nI            := 0
-	Local cQuery         := ""
-	local cValor
+    Local aArea := GetArea()
+    Local cNome := " "
+    Local cAlias := GetNextAlias()
+    Local oModel := FWModelActive()
+    Local oModelGrid := oModel:GetModel('SU5CHILD')
+    Local cCelular := oModelGrid:GetValue('U5_CELULAR')
+    Local cDDD := oModelGrid:GetValue('U5_DDD') 
+    local aCols := oModelGrid:aHeader
+    local nCampos := {}
+    local nI := 0
+    Local cQuery := ""
+    local cValor
 
-	cQuery += 'SELECT * FROM '+RetSqlName("SU5")+''
-	cQuery += " WHERE U5_CELULAR = '"+cCelular+"' "
-	cQuery += " AND D_E_L_E_T_ = ' ' "
+    cQuery += 'SELECT * FROM ' + RetSqlName("SU5") + ''
+    cQuery += " WHERE U5_CELULAR = '" + cCelular + "'"
+    cQuery += " AND U5_DDD = '" + cDDD + "'" 
+    cQuery += " AND D_E_L_E_T_ = ' ' "
+
+    MpSysOpenQuery(cQuery, cAlias)
+
+    if ALLTRIM((cAlias)->(U5_CONTAT)) == ""
+        oModel:SetValue("SU5CHILD", "U5_CODCONT", "")
+        return cNome
+    endif
+
+    FOR nI := 1 TO Len(aCols)
+        if aCols[nI, 10] == 'R' .AND. aCols[nI, 8] != 'M'
+            AAdd(nCampos, aCols[nI, 2])
+        endif
+    NEXT
+
+    dbselectarea("SU5")
+    IF !(Empty(nCampos))
+        FOR nI := 1 TO Len(nCampos)
+            cValor := ALLTRIM((cAlias)->&((nCampos[nI])))
+            if (nCampos[nI]) == "U5_NIVER"
+                cValor := STOD(cValor)
+            endif
+            oModel:SetValue("SU5CHILD", (nCampos[nI]), cValor)
+        NEXT
+        SU5->(dbskip())
+    ENDIF
+
+    RestArea(aArea)
+
+    cNome := ALLTRIM((cAlias)->(U5_CONTAT))
+
+    Return cNome
 
 
-	MpSysOpenQuery(cQuery,cAlias)
-
-	if ALLTRIM((cAlias)->(U5_CONTAT)) == ""
-		oModel:SetValue("SU5CHILD","U5_CODCONT","")
-		return cNome
-	endif
-
-	FOR nI := 1 TO Len(aCols)
-		if aCols[nI,10] == 'R' .AND.  aCols[nI,8] != 'M'
-			AAdd(nCampos,aCols[nI,2] )
-		endif
-	NEXT
-
-
-	dbselectarea("SU5")
-	IF !(Empty(nCampos))
-		FOR nI := 1 TO Len(nCampos)
-			cValor := ALLTRIM((cAlias)->&((nCampos[nI])))
-			oModel:SetValue("SU5CHILD",(nCampos[nI]),cValor)
-		NEXT
-		SU5->(dbskip())
-	ENDIF
-
-	RestArea(aArea)
-
-	cNome := ALLTRIM((cAlias)->(U5_CONTAT))
-
-Return cNome
 
 
 Static Function tBtn(oPanel)
@@ -495,18 +506,18 @@ Static Function AddGridd()
 	Local oView 		  := FwViewActive()
 	Local oModelGrid      := oModel:GetModel('SU5CHILD')
 	Local oModelFields    := oModel:GetModel('SU5TOPRF')
-	Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV", "U5_CODCONT"}
+	Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV", "U5_CODCONT","U5_DDD"}
 	Local nI
 	Local Conteudo
 	Local nLinha
 
 
 	if Empty(ALLTRIM(oModelFields:GetValue("U5_CONTAT")))
-		MsgStop("Necess·rio informar o nome do contato")
+		MsgStop("Necess√°rio informar o nome do contato")
 		return
 	endif
 	if Empty(ALLTRIM(oModelFields:GetValue("U5_CARGO")))
-		MsgStop("Necess·rio informar o cargo do contato")
+		MsgStop("Necess√°rio informar o cargo do contato")
 		return
 	endif
 
@@ -532,37 +543,42 @@ Return
 
 
 User Function GATFIELD()
-	Local cNome 		:= " "
-	Local cAlias 		:= GetNextAlias()
-	Local oModel 		:= FWModelActive()
-	Local oModelGrid 	:= oModel:GetModel('SU5TOPRF')
-	Local cCelular 	    := oModelGrid:GetValue('U5_CELULAR' )
-	local nI            := 0
-	Local cQuery         := ""
-	local cValor
-	Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV","U5_CODCONT"}
+    Local cNome := " "
+    Local cAlias := GetNextAlias()
+    Local oModel := FWModelActive()
+    Local oModelGrid := oModel:GetModel('SU5TOPRF')
+    Local cCelular := oModelGrid:GetValue('U5_CELULAR')
+    Local cDDD := oModelGrid:GetValue('U5_DDD') 
+    local nI := 0
+    Local cQuery := ""
+    local cValor
+    Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV", "U5_CODCONT", "U5_DDD"}
 
-	cQuery += 'SELECT * FROM '+RetSqlName("SU5")+''
-	cQuery += " WHERE U5_CELULAR = '"+cCelular+"' "
-	cQuery += " AND D_E_L_E_T_ = ' ' "
+    cQuery += 'SELECT * FROM ' + RetSqlName("SU5") + ''
+    cQuery += " WHERE U5_CELULAR = '" + cCelular + "'"
+    cQuery += " AND U5_DDD = '" + cDDD + "'" 
+    cQuery += " AND D_E_L_E_T_ = ' ' "
 
+    MpSysOpenQuery(cQuery, cAlias)
 
-	MpSysOpenQuery(cQuery,cAlias)
+    if ALLTRIM((cAlias)->(U5_CONTAT)) == ""
+        oModel:SetValue("SU5TOPRF", "U5_CODCONT", "")
+        oModel:SetValue("SU5TOPRF", "U5_CELULAR", cCelular)
+        return cNome
+    endif
 
-	if ALLTRIM((cAlias)->(U5_CONTAT)) == ""
-	oModel:SetValue("SU5TOPRF","U5_CODCONT","")
-	oModel:SetValue("SU5TOPRF","U5_CELULAR",cCelular)
-return cNome
-endif
+    FOR nI := 1 TO Len(aCamposPermitidos)
+        cValor := (cAlias)->&((aCamposPermitidos[nI]))
+        if (aCamposPermitidos[nI]) == "U5_NIVER"
+            cValor := STOD(cValor)
+        endif
+        oModel:SetValue("SU5TOPRF", (aCamposPermitidos[nI]), cValor)
+    NEXT
 
-FOR nI := 1 TO Len(aCamposPermitidos)
-	cValor := (cAlias)->&((aCamposPermitidos[nI]))
-	oModel:SetValue("SU5TOPRF",(aCamposPermitidos[nI]),cValor)
-NEXT
+    cNome := ALLTRIM((cAlias)->(U5_CONTAT))
 
-cNome := ALLTRIM((cAlias)->(U5_CONTAT))
+    Return cNome
 
-Return cNome
 
 Static Function GetModelFields()
 
@@ -572,26 +588,26 @@ Static Function GetModelFields()
 	Local nAtual
 	Local nI
 
-	// Adiciona um campo ‡ estrutura
+	// Adiciona um campo √† estrutura
 	For nI := 2 To Len(oStructSU5:AFIELDS)
 		Virtual := oStructSU5:AFIELDS[nI][14]
 		If  Virtual == .F.
 			oStru:AddField(;
-				oStructSU5:AFIELDS[nI][1],;  // cTitulo: TÌtulo do campo
+				oStructSU5:AFIELDS[nI][1],;  // cTitulo: T√≠tulo do campo
 			oStructSU5:AFIELDS[nI][2],;  // cTooltip: Tooltip do campo
 			oStructSU5:AFIELDS[nI][3],;  // cIdField: ID do campo
 			oStructSU5:AFIELDS[nI][4],;  // cTipo: Tipo do campo (Caracter)
 			oStructSU5:AFIELDS[nI][5],;  // nTamanho: Tamanho do campo
-			oStructSU5:AFIELDS[nI][6],; // nDecimal: Decimal do campo (0 por padr„o)
-			,;                           // bValid: Bloco de cÛdigo de validaÁ„o do campo
-			,;                           // bWhen: Bloco de cÛdigo de validaÁ„o when do campo
+			oStructSU5:AFIELDS[nI][6],; // nDecimal: Decimal do campo (0 por padr√£o)
+			,;                           // bValid: Bloco de c√≥digo de valida√ß√£o do campo
+			,;                           // bWhen: Bloco de c√≥digo de valida√ß√£o when do campo
 			,;                           // aValues: Lista de valores permitidos para o campo
-			oStructSU5:AFIELDS[nI][10],; // lObrigat: Indica se o campo È obrigatÛrio (.T. para verdadeiro)
-			,; // bInit: Bloco de cÛdigo de inicializaÁ„o do campo
-			,;                           // lKey: Indica se È um campo chave (verdadeiro/falso)
-			oStructSU5:AFIELDS[nI][13],; // lNoUpd: Indica se o campo n„o pode ser atualizado
-			,;                           // lVirtual: Indica se o campo È virtual
-			,;                           // cValid: Valid do usu·rio em formato texto
+			oStructSU5:AFIELDS[nI][10],; // lObrigat: Indica se o campo √© obrigat√≥rio (.T. para verdadeiro)
+			,; // bInit: Bloco de c√≥digo de inicializa√ß√£o do campo
+			,;                           // lKey: Indica se √© um campo chave (verdadeiro/falso)
+			oStructSU5:AFIELDS[nI][13],; // lNoUpd: Indica se o campo n√£o pode ser atualizado
+			,;                           // lVirtual: Indica se o campo √© virtual
+			,;                           // cValid: Valid do usu√°rio em formato texto
 			)
 		EndIf
 	Next
@@ -600,12 +616,12 @@ Static Function GetModelFields()
 		"U5_CELULAR",;                               //Campo Origem
 	"U5_CONTAT",;                               //Campo Destino
 	"u_GATFIELD()",;                                   //Regra de Preenchimento
-	.F.,;                                       //Ir· Posicionar?
+	.F.,;                                       //Ir√° Posicionar?
 	"",;                                        //Alias de Posicionamento
-	0,;                                         //Õndice de Posicionamento
+	0,;                                         //√çndice de Posicionamento
 	'',;                                        //Chave de Posicionamento
-	NIL,;                    					//CondiÁ„o para execuÁ„o do gatilho
-	"01");                                      //SequÍncia do gatilho
+	NIL,;                    					//Condi√ß√£o para execu√ß√£o do gatilho
+	"01");                                      //Sequ√™ncia do gatilho
 	)
 
 	//Percorrendo os gatilhos e adicionando na Struct
@@ -613,8 +629,8 @@ Static Function GetModelFields()
 		oStru:AddTrigger( ;
 			aGatilhos[nAtual][01],; //Campo Origem
 		aGatilhos[nAtual][02],; //Campo Destino
-		aGatilhos[nAtual][03],; //Bloco de cÛdigo na validaÁ„o da execuÁ„o do gatilho
-		aGatilhos[nAtual][04];  //Bloco de cÛdigo de execuÁ„o do gatilho
+		aGatilhos[nAtual][03],; //Bloco de c√≥digo na valida√ß√£o da execu√ß√£o do gatilho
+		aGatilhos[nAtual][04];  //Bloco de c√≥digo de execu√ß√£o do gatilho
 		)
 	Next
 
