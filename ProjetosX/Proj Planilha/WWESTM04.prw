@@ -59,8 +59,9 @@ Static Function fImporta(cArqSel)
 	Local x          := 0
 	Local aItens     := {}
 	Local aVetor     := {}
+	Local Grava      := .T.
 
-	Private cSeparador := ','
+	Private cSeparador := ';'
 
 	//Definindo o arquivo a ser lido
 	oArquivo := FWFileReader():New(cArqSel)
@@ -123,7 +124,10 @@ Static Function fImporta(cArqSel)
 						For x := 1 to len(cChav)
 							aAdd(aVetor, aItens[cChav[x]])
 						Next
+						    Grava := Analist(aVetor)
+							if Grava == .T.
 							fExecAuto(@cLog,nLinhaAtu,aVetor)
+							EndIf
 					endif
 				EndDo
 			End Transaction
@@ -149,6 +153,8 @@ Return
 	Executa o ExecAuto
 /*/
 Static Function fExecAuto(cLog,nLinhaAtu,aVetor)
+
+
 
 	Local cPastaErro := '\x_logs\'
 	Local cNomeErro  := ''
@@ -223,7 +229,7 @@ Static Function fXLStoCSV(cArqXLS)
 	cScript += 'Set oExcel = CreateObject("Excel.Application")' + CRLF
 	cScript += 'Dim oBook' + CRLF
 	cScript += 'Set oBook = oExcel.Workbooks.Open(Wscript.Arguments.Item(0))' + CRLF
-	cScript += 'oBook.SaveAs WScript.Arguments.Item(1), 6' + CRLF
+	cScript += 'oBook.SaveAs WScript.Arguments.Item(1), 6, 0, 0, 0, 0, 0, 0,0,0,0,true' + CRLF
 	cScript += 'oBook.Close False' + CRLF
 	cScript += 'oExcel.Quit' + CRLF
 	MemoWrite(cArqScript, cScript)
@@ -239,6 +245,7 @@ Static Function fXLStoCSV(cArqXLS)
 		FERASE(cArqCSV)
 	endif
 
+	
 	//Executa a conversão, exemplo:
 	//   c:\totvs\Testes\XlsToCsv.vbs "C:\Users\danat\Downloads\tste2.xls" "C:\Users\danat\Downloads\tst2_csv.csv"
 	ShellExecute("OPEN", cArqScript, ' "' + cArqXLS + '" "' + cArqCSV + '"', cDirTemp, 0 )
@@ -247,3 +254,42 @@ Static Function fXLStoCSV(cArqXLS)
 	sleep(3000)
 
 Return cArqCSV
+
+
+Static Function Analist(aVetor)
+    Local lRet := .T.
+    Local cAlias := GetNextAlias()
+    Local cQuery := ""
+    Local cCampo := ""
+
+    // Função para converter data para o formato YYYYMMDD
+    Local cDat := FormatDate(cData)
+
+    cQuery := 'SELECT B7_COD FROM ' + RetSqlName("SB7") + ' '
+    cQuery += "WHERE D_E_L_E_T_ = ' ' "
+    cQuery += "AND B7_COD = '"+ AllTrim(aVetor[1]) +"' "
+    cQuery += "AND B7_DATA = " + cDat + " "
+    cQuery += "AND B7_LOCAL = '" + AllTrim(aVetor[2]) + "' "
+    cQuery += "AND B7_DOC = '" + cCod + "' "
+    cQuery += "AND B7_ESCOLHA = 'S' "
+    cQuery += "AND B7_FILIAL = '" + xFilial("SB7") + "' "
+
+    MpSysOpenQuery(cQuery, cAlias)
+
+    While !EOF()
+        cCampo := AllTrim((cAlias)->B7_COD)
+        If cCampo == AllTrim(aVetor[1])
+            lRet := .F.
+            Exit
+        Else
+            (cAlias)->(dbskip())
+            lRet := .T.
+            Exit
+        EndIf
+    End
+
+Return lRet
+
+// Função para formatar a data no formato YYYYMMDD
+Static Function FormatDate(dDate)
+    Return SubStr(DToC(dDate), 7, 4) + SubStr(DToC(dDate), 4, 2) + SubStr(DToC(dDate), 1, 2)
