@@ -1,0 +1,168 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 2px solid #001a4f;
+
+
+
+}
+
+.logo {
+    max-width: 150px;
+}
+
+.header-text {
+    text-align: right;
+}
+
+.header-text p {
+    margin: 0;
+    display: flex;
+}
+
+.header-info {
+    margin: 20px 0;
+    font-size: 1.1em;
+    text-align: center;
+    
+    
+}
+
+.container {
+    width: 90%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-containers {
+
+    margin-right: 20px;
+    
+}
+
+.summary-card {
+    flex: 1;
+    
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 50px;
+    padding: 20px;
+    background-color: #efefef;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); 
+}
+
+h2, h3 {
+    color: #001a4f;
+    margin-bottom: 10px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #001a4f;
+    color: white;
+}
+
+table td {
+    white-space: nowrap;
+}
+
+.total-label {
+    font-weight: bold;
+    text-align: right;
+}
+
+.total-value {
+    font-weight: bold;
+    text-align: right;
+    background-color: #f2f2f2;
+}
+
+.summary {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.summary th, .summary td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.summary th {
+    background-color: #001a4f;
+    color: white;
+}
+
+.summary td {
+    white-space: nowrap;
+}
+
+.total-labelFim {
+    font-weight: bold;
+    text-align: right;
+    background-color: #f2f2f2;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #001a4f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #001a4f;
+}
+.table-row{
+    display: flex;
+    flex-direction: column
+}
+.flex-order {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.flex-order > div {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.flex-order > div:last-child {
+    margin-right: 0;
+}
