@@ -1,0 +1,183 @@
+#Include "Totvs.ch"
+#Include "FWMVCDef.ch"
+
+/*/{Protheus.doc} User Function zExe234
+
+/*/
+
+User Function PEDVEN()
+	Local aArea    := FWGetArea()
+
+
+	Processa({|| fGeraExcel()})
+
+	FWRestArea(aArea)
+Return
+
+/*/{Protheus.doc} fGeraExcel
+Criação do arquivo Excel na função zRel21
+
+/*/
+
+Static Function fGeraExcel()
+	Local oFWMsExcel
+	Local oExcel
+	Local cQuery        := FGetQuery()
+	Local cAlias        := GetNextAlias()
+	Local cWorkSheet
+	Local cTitulo       := "PEDIDO"
+	Local NumPed        := ""
+	Local cArquivo      := GetTempPath() + "zRel21.xml"
+	Local Ntab          := 1
+
+	// Executando consulta
+	MpSysOpenQuery(cQuery, cAlias)
+
+	oFWMsExcel := FWMsExcelEx():New()
+
+	// Verificando se o objeto foi criado com sucesso
+	If oFWMsExcel == NIL
+		MsgInfo("Erro ao criar o objeto de Excel")
+		Return
+	EndIf
+
+	cWorkSheet := "PEDIDO " + AllTrim(Str(nTab)) + ""
+	cWorkSheet := AllTrim(cWorkSheet)
+	// Criando a aba da planilha
+
+
+	// Percorrendo os dados da query
+	While (cAlias)->(!EOF())
+
+		if NumPed <> (cAlias)->C6_NUM
+			cWorkSheet := "PEDIDO " + AllTrim(Str(nTab)) + ""
+			cWorkSheet := AllTrim(cWorkSheet)
+			oFWMsExcel:AddWorkSheet(cWorkSheet)
+			NumPed := (cAlias)->C6_NUM 
+			cTitulo    := " N°" + NumPed + " PEDIDO"
+			cTitulo    := AllTrim(cTitulo)
+
+			// Criando a Tabela e as colunas
+			oFWMsExcel:AddTable(cWorkSheet, cTitulo , .T.)
+			oFWMsExcel:AddColumn(cWorkSheet, cTitulo, "CLIENTE", 3, 1, .F.)
+			oFWMsExcel:AddColumn(cWorkSheet, cTitulo, "CAIXAS", 3, 2, .F.)
+			oFWMsExcel:AddColumn(cWorkSheet, cTitulo, "PRODUTO", 3, 2, .F.)
+			oFWMsExcel:AddColumn(cWorkSheet, cTitulo, "PREÇO UNITÁRIO", 3, 2, .F.)
+			oFWMsExcel:AddColumn(cWorkSheet, cTitulo, "PREÇO CAIXA", 3, 2, .F.)
+			oFWMsExcel:AddColumn(cWorkSheet, cTitulo, "TOTAL", 3, 2, .T.)
+			nTab := nTab + 1
+		endif
+
+		// Adicionando uma linha de exemplo - ajuste conforme necessário
+		oFWMsExcel:AddRow(cWorkSheet, cTitulo, {;
+			(cAlias)->C5_CLIENTE,;
+			(cAlias)->QTD_CAIXAS,;
+			(cAlias)->B1_DESC,;
+			(cAlias)->C6_PRCVEN,;
+			(cAlias)->VALOR_POR_CAIXA,;
+			(cAlias)->VALOR_TOTAL_POR_ITEM;
+			})
+
+		(cAlias)->(dbskip())
+	EndDo
+
+
+
+
+
+
+
+
+
+	// Ativando o arquivo e gerando o XML
+	oFWMsExcel:Activate()
+	oFWMsExcel:GetXMLFile(cArquivo)
+
+	// Abrindo o Excel e abrindo o arquivo XML
+	oExcel := MsExcel():New()
+	oExcel:WorkBooks:Open(cArquivo)
+	oExcel:SetVisible(.T.)
+	oExcel:Destroy()
+
+Return
+
+Static Function FGetQuery()
+	Local cQuery := ""
+	cQuery += 'SELECT '
+	cQuery +=     'SC5.C5_CLIENTE, '
+	cQuery +=     'SA1.A1_NOME, '
+	cQuery +=     'SA1.A1_CGC, '
+	cQuery +=     'SA1.A1_ENDREC, '
+	cQuery +=     'SA1.A1_EMAIL, '
+	cQuery +=     'SC6.C6_ENTREG, '  // Data prevista da entrega do pedido.
+	cQuery +=     'SC6.C6_NUM, '
+	cQuery +=     'SC6.C6_PRODUTO, '
+	cQuery +=     'SB1.B1_DESC, '
+	cQuery +=     'SC6.C6_PRCVEN, '
+	cQuery +=     'SC6.C6_ITEM, '
+	cQuery +=     'SC6.C6_QTDVEN, '
+	cQuery +=     'SC6.C6_QTDENT, '
+	cQuery +=     'SC6.C6_BLQ, '
+	cQuery +=     '((SC6.C6_QTDVEN - SC6.C6_QTDLIB) / 12) AS QTD_CAIXAS, '  // Quantidade de caixas considerando 12 unidades por caixa
+	cQuery +=     'SC6.C6_PRCVEN * 12 AS VALOR_POR_CAIXA, '  // Valor de cada caixa
+	cQuery +=     '(SC6.C6_QTDVEN - SC6.C6_QTDLIB) * SC6.C6_PRCVEN AS VALOR_TOTAL_POR_ITEM '  //Valor total por item
+	cQuery += 'FROM '
+	cQuery +=     RetSqlName("SC5") + ' SC5 '
+	cQuery +=     'INNER JOIN ' + RetSqlName("SC6") + ' SC6 ON '
+	cQuery +=         'SC5.C5_NUM = SC6.C6_NUM '
+	cQuery +=         'AND SC5.C5_CLIENTE = SC6.C6_CLI '
+	cQuery +=         'AND SC5.C5_FILIAL = SC6.C6_FILIAL '
+	cQuery +=         'AND SC5.D_E_L_E_T_ = SC6.D_E_L_E_T_ '
+	cQuery +=     'INNER JOIN ' + RetSqlName("SB1") + ' SB1 ON '
+	cQuery +=         'SB1.B1_COD = SC6.C6_PRODUTO '
+	cQuery +=         'AND SB1.D_E_L_E_T_ = SC6.D_E_L_E_T_ '
+	cQuery +=     'INNER JOIN ' + RetSqlName("SA1") + ' SA1 ON '
+	cQuery +=         'SA1.A1_COD = SC5.C5_CLIENTE '
+	cQuery +=         'AND SA1.D_E_L_E_T_ = SC5.D_E_L_E_T_ '
+	cQuery += 'WHERE '
+	cQuery +=     "SC6.C6_BLQ <> 'S' "
+	cQuery +=     'AND SC6.C6_QTDVEN > SC6.C6_QTDENT '// Orderby adicionar
+	cQuery += 'ORDER BY '
+	cQuery +=     'SC6.C6_NUM '
+
+Return cQuery
+
+
+
+
+SELECT 
+    SC5.C5_CLIENTE, 
+    SA1.A1_NOME, 
+    SA1.A1_CGC, 
+    SA1.A1_ENDREC, 
+    SA1.A1_EMAIL, 
+    SC6.C6_ENTREG,  -- Data prevista da entrega do pedido.
+    SC6.C6_NUM, 
+    SC6.C6_PRODUTO, 
+    SB1.B1_DESC, 
+    SC6.C6_PRCVEN, 
+    SC6.C6_ITEM, 
+    SC6.C6_QTDVEN, 
+    SC6.C6_QTDENT, 
+    SC6.C6_BLQ, 
+    ((SC6.C6_QTDVEN - SC6.C6_QTDLIB) / 12) AS QTD_CAIXAS,  -- Quantidade de caixas considerando 12 unidades por caixa
+    SC6.C6_PRCVEN * 12 AS VALOR_POR_CAIXA,  -- Valor de cada caixa
+    (SC6.C6_QTDVEN - SC6.C6_QTDLIB) * SC6.C6_PRCVEN AS VALOR_TOTAL_POR_ITEM  -- Valor total por item
+FROM 
+    SC5990 as SC5
+    INNER JOIN SC6990 as SC6 ON 
+        SC5.C5_NUM = SC6.C6_NUM 
+        AND SC5.C5_CLIENTE = SC6.C6_CLI 
+        AND SC5.C5_FILIAL = SC6.C6_FILIAL 
+        AND SC5.D_E_L_E_T_ = SC6.D_E_L_E_T_ 
+    INNER JOIN SB1990 as SB1 ON 
+        SB1.B1_COD = SC6.C6_PRODUTO 
+        AND SB1.D_E_L_E_T_ = SC6.D_E_L_E_T_ 
+    INNER JOIN SA1990 as SA1 ON 
+        SA1.A1_COD = SC5.C5_CLIENTE 
+        AND SA1.D_E_L_E_T_ = SC5.D_E_L_E_T_ 
+WHERE 
+    SC6.C6_BLQ <> 'S' 
+    AND SC6.C6_QTDVEN > SC6.C6_QTDENT 
+ORDER BY 
+    SC6.C6_NUM;
