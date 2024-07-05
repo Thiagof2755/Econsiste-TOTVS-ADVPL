@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>
+    Filtrar Pedidos
+    <button mat-icon-button class="close-button" (click)="cancel()">
+        <mat-icon>close</mat-icon>
+    </button>
+</h1>
+<form [formGroup]="filterForm" mat-dialog-content>
+    <mat-form-field appearance="fill">
+        <mat-label>Cliente De</mat-label>
+        <input matInput formControlName="clienteDe" maxlength="6" placeholder="000000">
+        <mat-error *ngIf="filterForm.get('clienteDe').hasError('required')">Este campo é obrigatório</mat-error>
+        <mat-error *ngIf="filterForm.get('clienteDe').hasError('maxlength')">Máximo de 6 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Cliente Até</mat-label>
+        <input matInput formControlName="clienteAte" maxlength="6" placeholder="000000">
+        <mat-error *ngIf="filterForm.get('clienteAte').hasError('required')">Este campo é obrigatório</mat-error>
+        <mat-error *ngIf="filterForm.get('clienteAte').hasError('maxlength')">Máximo de 6 caracteres</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Data De</mat-label>
+        <input matInput formControlName="dataDe" type="date">
+        <mat-error *ngIf="filterForm.get('dataDe').hasError('required')">Este campo é obrigatório</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Data Até</mat-label>
+        <input matInput formControlName="dataAte" type="date">
+        <mat-error *ngIf="filterForm.get('dataAte').hasError('required')">Este campo é obrigatório</mat-error>
+    </mat-form-field>
+</form>
+<div mat-dialog-actions>
+    <button mat-button (click)="applyFilter()" [disabled]="filterForm.invalid" cdkFocusInitial>Aplicar</button>
+    <button mat-button (click)="resetAndClose()" class="Trazer">Trazer Tudo</button>
+</div>

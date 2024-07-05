@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface Produto {
   caixas: number;
@@ -31,23 +35,53 @@ interface Pedido {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   standalone: true,
-  imports: [CommonModule, HttpClientModule] // Adiciona HttpClientModule aqui
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    MatDialogModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    FilterDialogComponent
+  ]
 })
 export class AppComponent implements OnInit {
   title = 'exceljs-angular';
   pedidos: Pedido[] = [];
+  isLoading = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.fetchPedidos();
+    this.openFilterDialog();
   }
 
-  fetchPedidos() {
-    this.http.get<{ ConsultarPedidos: Pedido[] }>('http://localhost:8080/rest/REESTPED/consultar/Pedidos')
+  openFilterDialog(): void {
+    const dialogRef = this.dialog.open(FilterDialogComponent, {
+      width: '300px',
+      disableClose: true // Desabilita o fechamento ao clicar fora do diálogo
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fetchPedidos(result);
+      }
+    });
+  }
+
+  fetchPedidos(filter: { clienteDe: string, clienteAte: string, dataDe: string, dataAte: string }) {
+    this.isLoading = true;
+    const url = `http://192.168.55.235:8970/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}`;
+    console.log(url);
+    this.http.get<{ ConsultarPedidos: Pedido[] }>(url)
       .subscribe(
-        response => this.pedidos = response.ConsultarPedidos,
-        error => console.error('Error fetching pedidos:', error)
+        response => {
+          this.pedidos = response.ConsultarPedidos;
+          this.isLoading = false;
+        },
+        error => {
+          console.error('Error fetching pedidos:', error);
+          this.isLoading = false;
+        }
       );
   }
 
@@ -73,7 +107,6 @@ export class AppComponent implements OnInit {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Pedidos');
 
-    // Função para criar o cabeçalho
     const createHeader = () => {
       worksheet.mergeCells('A1:G1');
       worksheet.getCell('A1').value = 'Rodovia BR-153 - Lote 1-A - Zona de Expansão Industrial';
@@ -103,17 +136,14 @@ export class AppComponent implements OnInit {
     this.pedidos.forEach(pedido => {
       const currentRow = worksheet.rowCount + 1;
 
-      // Dados do Cliente na Coluna A
       worksheet.getCell(`A${currentRow}`).value = `Numero: ${pedido.numero}`;
-      worksheet.getCell(`A${currentRow}`).font = { bold: true, color: { argb: 'FFFFFFFF' } }; // Define a fonte branca
-
-      // Preencher a célula com cor azul e definir a fonte branca
+      worksheet.getCell(`A${currentRow}`).font = { bold: true, color: { argb: 'FFFFFFFF' } };
       worksheet.getCell(`A${currentRow}`).fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FF000080' } // Cor azul
+        fgColor: { argb: 'FF000080' }
       };
-      worksheet.getCell(`A${currentRow}`).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+
       worksheet.getCell(`A${currentRow + 1}`).value = `CLIENTE: ${pedido.cliente}`;
       worksheet.getCell(`A${currentRow + 1}`).font = { bold: true };
 
@@ -132,26 +162,24 @@ export class AppComponent implements OnInit {
       worksheet.getCell(`A${currentRow + 8}`).value = `OBS: ${pedido.obs}`;
       worksheet.getCell(`A${currentRow + 8}`).font = { bold: true };
 
-      // Cabeçalho dos Produtos na Coluna C e subsequentes, começando na mesma linha que os dados do cliente
       const productHeaderRow = currentRow;
       worksheet.getCell(`B${productHeaderRow}`).value = 'CAIXAS';
       worksheet.getCell(`C${productHeaderRow}`).value = 'PRODUTO';
       worksheet.getCell(`D${productHeaderRow}`).value = 'PREÇO UNITÁRIO';
       worksheet.getCell(`E${productHeaderRow}`).value = 'PREÇO CAIXA';
       worksheet.getCell(`F${productHeaderRow}`).value = 'TOTAL';
+
       ['B', 'C', 'D', 'E', 'F'].forEach(col => {
         const cell = worksheet.getCell(`${col}${productHeaderRow}`);
         cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
         cell.fill = {
           type: 'pattern',
           pattern: 'solid',
-          fgColor: { argb: 'FF000080' },
-
+          fgColor: { argb: 'FF000080' }
         };
         cell.alignment = { vertical: 'middle', horizontal: 'center' };
       });
 
-      // Itens do Pedido, começando na linha após os dados do cliente
       pedido.produtos.forEach((produto, index) => {
         const productRow = productHeaderRow + index + 1;
         worksheet.getCell(`B${productRow}`).value = produto.caixas;
@@ -159,36 +187,33 @@ export class AppComponent implements OnInit {
         worksheet.getCell(`D${productRow}`).value = `R$ ${produto.precoUnitario.toFixed(2)}`;
         worksheet.getCell(`E${productRow}`).value = `R$ ${produto.precoCaixa.toFixed(2)}`;
         worksheet.getCell(`F${productRow}`).value = `R$ ${produto.total.toFixed(2)}`;
-        // Centralizar as células
         ['B', 'C', 'D', 'E', 'F'].forEach(col => {
           const cell = worksheet.getCell(`${col}${productRow}`);
           cell.alignment = { vertical: 'middle', horizontal: 'center' };
         });
       });
 
-      // Total do Pedido, após os itens do pedido ou abaixo da OBS
-      const lastDataRow = currentRow + 8; // Linha onde terminam os dados do cliente e OBS
-      const lastProductRow = productHeaderRow + pedido.produtos.length; // Linha onde terminam os produtos
-
-      const totalRow = Math.max(lastDataRow, lastProductRow) + 1; // Seleciona a maior linha entre dados e produtos e adiciona uma linha
+      const lastDataRow = currentRow + 8;
+      const lastProductRow = productHeaderRow + pedido.produtos.length;
+      const totalRow = Math.max(lastDataRow, lastProductRow) + 1;
 
       const totalCellD = worksheet.getCell(`E${totalRow}`);
       totalCellD.value = 'TOTAL DO PEDIDO';
-      totalCellD.font = { bold: true, color: { argb: 'FFFFFFFF' } }; // Fonte branca
+      totalCellD.font = { bold: true, color: { argb: 'FFFFFFFF' } };
       totalCellD.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FF000080' } // Fundo azul
+        fgColor: { argb: 'FF000080' }
       };
       totalCellD.alignment = { vertical: 'middle', horizontal: 'right' };
 
       const totalCellE = worksheet.getCell(`F${totalRow}`);
       totalCellE.value = `R$ ${pedido.totalPedido.toFixed(2)}`;
-      totalCellE.font = { bold: true, color: { argb: '0000000' } }; // Fonte branca
+      totalCellE.font = { bold: true, color: { argb: '0000000' } };
       totalCellE.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFFFF' } // Fundo azul
+        fgColor: { argb: 'FFFFFFFF' }
       };
       totalCellE.alignment = { vertical: 'middle', horizontal: 'center' };
 
@@ -198,7 +223,6 @@ export class AppComponent implements OnInit {
       worksheet.addRow([]);
     });
 
-    // Adicionar a tabela de total de caixas
     const totalTableHeaderRow = worksheet.rowCount + 1;
     worksheet.getCell(`A${totalTableHeaderRow}`).value = 'Descrição';
     worksheet.getCell(`B${totalTableHeaderRow}`).value = 'Total de Caixas';

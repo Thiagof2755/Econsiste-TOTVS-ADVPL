@@ -1,17 +1,15 @@
 /* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    
+
 }
 
 .header {
     display: flex;
     align-items: center;
-    padding: 10px;
-    border-bottom: 2px solid #001a4f;
-
-
-
+    gap: 30px;
+    padding-left: 3rem;
+    padding-top:3rem ;
 }
 
 .logo {
@@ -20,6 +18,11 @@ body {
 
 .header-text {
     text-align: right;
+    font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 1rem;
 }
 
 .header-text p {
@@ -31,8 +34,6 @@ body {
     margin: 20px 0;
     font-size: 1.1em;
     text-align: center;
-    
-    
 }
 
 .container {
@@ -49,14 +50,11 @@ body {
 }
 
 .table-containers {
-
     margin-right: 20px;
-    
 }
 
 .summary-card {
     flex: 1;
-    
 }
 
 .card {
@@ -148,21 +146,48 @@ button {
 button:hover {
     background-color: #001a4f;
 }
-.table-row{
+
+.table-row {
     display: flex;
-    flex-direction: column
+    flex-direction: column;
 }
+
 .flex-order {
     display: flex;
     justify-content: space-between;
-    
+    align-items: stretch;
 }
 
 .flex-order > div {
-    flex: 1;
+    flex-grow: 1;
     margin-right: 10px;
 }
 
 .flex-order > div:last-child {
     margin-right: 0;
+}
+
+/* New Styles */
+.client-info {
+    flex-basis: 40%;
+    flex-shrink: 0;
+}
+
+.product-info {
+    flex-basis: 60%;
+    flex-shrink: 0;
+}
+
+.total-section {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    font-weight: bold;
+}
+
+
+.btn-filter{
+    position: fixed;
+    top: 20px;
+    right: 20px;
 }
