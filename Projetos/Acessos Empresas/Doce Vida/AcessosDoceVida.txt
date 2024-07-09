@@ -1,0 +1,8 @@
+IP:10.1.1.60
+
+DOCEVIDA\emerson.martins
+Consult@DVA 
+
+Senha Admin do Protheus
+Usr : admin
+adPss : DVA$2023F

@@ -1,0 +1,76 @@
+﻿**************************
+
+Contato: Vanuza
+Tel: 64 8144-7400
+
+**************************
+Dados de acesso remoto
+**************************
+IP: 187.5.123.199:3390
+Ip: 45.167.30.4:33978
+ip: 45.177.254.106:33978
+
+
+Usuario: emerson
+Senha: Siap#2021
+
+Login: PROTHEUSSERVER\econsiste
+Senha: agro@siap2021
+
+**************************
+Acesso Protheus
+**************************
+
+*Produção
+
+Usuario: emerson 
+Senha: siap#2019
+
+Usuario: admin
+Senha: siap@2022
+
+* Teste
+
+Usuario: admin
+Senha: siap@2022
+
+*************************
+DNS PROTHEUS
+*************************
+[tcp]
+server=45.167.30.4
+port=1235
+
+*************************
+Banco de dados
+*************************
+Server: PROTHEUSSERVER
+Login: sa
+Senha: C@TALA0
+
+*************************
+Acesso TOTVS
+*************************
+CNPJ: 07.561.436/0001-07
+
+Login no Portal:
+Login: sistemas@siapagronegocios.com.br
+Senha: 4cr3un4
+
+Login: cota@siapagronegocios.com.br
+Senha: Admin#Siap2020
+
+
+Suporte Telefone:
+JOSE PEDRO TEODORO VIDAL
+CPF: 040.085.081-80
+Senha: 327560
+
+[tcp]
+server=191.7.30.53
+port=12000
+BrokerProxy=1
+
+
+
+

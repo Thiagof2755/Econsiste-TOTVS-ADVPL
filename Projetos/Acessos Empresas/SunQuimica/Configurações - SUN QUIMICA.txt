@@ -1,0 +1,216 @@
+====================
+ SUN QUIMICA
+====================
+Contato: Odilon
+Tel: 34 99244-7456
+
+ WI-FI
+====================
+Logistica
+-------------
+Rede: Sun Quimica
+Senha: Sunquimica@123
+*** Necessário que o MAC da maquina esteja cadastrado. Falar com Panice.
+
+ PROXY
+====================
+Usuario: econsiste
+Senha: Econsiste2017
+
+
+ Conexao externa (SUN QUIMICA)
+===============================
+**Utilizar OpenVPN - Instalador no DropBox
+---------------------
+User: sistema.totvs
+Pass: sun@2021
+
+TS IP: 192.168.109.1
+Usuário: sun.net\Econsiste
+Senha: Econsiste2017
+
+Usuário: sun.net\EconsisteAdm
+Senha: Econsiste@@
+
+
+SERVIDOR DE APLICAÇÃO / DADOS (ALGAR)
+=======================================
+IP: 192.168.104.139
+Usuário: administrator
+Senha: _Sun@Quimic@2015
+
+Usuário: Econsiste
+Senha: eco@2022B
+
+
+APLICAÇÃO TOTVS
+=================
+BASE OFICIAL
+---------------
+usuario: admin
+senha: adm@@09
+
+Usuário: Econsiste
+Senha:   adm@@09
+
+
+BASE TESTE - 192.168.109.4
+---------------
+usuario: admin
+senha: adm@@09
+
+Usuário: Econsiste
+Senha:   Econsiste#
+
+
+BASE ANTIGA
+---------------
+usuario: admin
+senha: admsun
+
+usuario: faturamento
+senha: fat
+
+usuario: Econsiste
+senha: Econsiste#
+
+==========================================================================
+SQL Server
+==========================================================================
+-------------------------------
+BASE OFICIAL PROTHEUS / LANDIX
+-------------------------------
+IP: 192.168.104.139
+
+Usuario: sa
+Senha: sun@fwnow17
+
+Usuario: dw
+Senha: dw@bi
+
+
+ABERTURA DE CHAMADOS
+======================
+CNPJ: 17.681.727/0001-84
+
+Usuário: suporte@sun.ind.br
+Senha: _Sun@Quimic@2015 
+CPF ENIZIA: 717.278.646-70
+Senha: 186038
+
+Usuário: emerson@econsiste.com.br
+Senha: Econsiste#10
+CPF: 566.037.971-00
+Senha: 123456
+
+-------------------------------
+BASE TESTE LANDIX
+-------------------------------
+IP: 192.168.109.4
+Banco de dados: 192.168.104.139\LANDIX_FLX_TESTE
+
+
+==========================================================================
+LANDIX
+==========================================================================
+ABERTURA DE CHAMADOS
+--------------------
+https://landix.desk.ms/?LoginPortal
+Usuário: estoque@sunquimica.com
+Senha: Econsiste#2020
+
+MIDDLEWARE
+----------
+Usuário: ADM
+Senha: senhaadm
+
+CONFIGURACAO ANDROID - LANDIX FLEX
+---------------------------------
+Rota: 000153
+Usuario: junior
+Senha: 000153
+Chave secreta: 12345
+
+OFICIAL (CTBC)
+---------
+Endereço: 187.72.197.254
+Porta: 1500
+
+TESTE (SUN QUIMICA)
+---------
+Endereço: 177.69.236.242 / 192.168.109.4
+Porta: 1501
+
+SSM WINDOWS
+----------------------------
+SQL Lite: http://www.sqliteexpert.com/download.htmlhttp://www.sqliteexpert.com/download.html
+Usuario: landix
+Senhe: 12345
+
+
+==========================================================================
+EMAILS
+==========================================================================
+http://mail.sunquimica.com/admin	(Para acessar administrativo via email ti@sunquimica)
+
+http://mail.sunquimica.com/webmail
+Email: suporte@sunquimica.com 
+Senha: SunQ@2016
+
+Email: workflow@sunquimica.com 
+Senha: Sun@2016
+
+Email: nfe@sunquimica.com 
+Senha: Sun@2016
+
+==========================================================================
+SENHAS PLANILHAS
+==========================================================================
+Precificação: 
+	VBA: 		Econsiste@_2014
+	Planilha: 	Econsiste@@2014
+	Atualiza Protheus: sunquimica@@
+	
+Obs.: Todas planilhas desenvolvidas, salvar em: \\192.168.109.1\almoxarifado\PLAN
+
+
+==========================================================================
+PowerBI
+==========================================================================
+GatewaySun_20
+ecbi#2020
+
+==========================================================================
+Mashups
+==========================================================================
+Nome de usuário: sunquimica 
+Senha: 12345678 
+
+==========================================================================
+CRYSTAL
+==========================================================================
+
+ODBC: Fonte de dados do usuario
+
+	Nome: CRYSTAL
+	Driver: Sql server
+	Servidor: 192.168.104.139
+
+	*Com autenticação do sql server
+	
+		id logon: sa
+		senha: sun@fwnow17
+
+*Fonte do codigo de barras na pasta da sunquimica no dropbox
+
+Para ajustes de layout o crystal reports esta instalado no servidor: 
+
+	IP: 192.168.109.1 - pasta z:\Microsiga\protheus_data\crystal
+
+
+
+
+
+
+
+

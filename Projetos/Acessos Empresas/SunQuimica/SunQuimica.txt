@@ -1,0 +1,20 @@
+SERVIDOR DE APLICAÇÃO / DADOS (ALGAR)
+=======================================
+IP: 192.168.104.139
+
+Usuário: Econsiste
+Senha: eco@2024C
+
+Usuário: administrator
+Senha: _Sun@Quimic@2015
+
+APLICAÇÃO TOTVS
+=================
+BASE OFICIAL
+---------------
+usuario: admin
+senha: adm@@09
+
+Banco de Dados
+Usuario: sa
+Senha: sun@fwnow17

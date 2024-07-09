@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-filter-dialog',
@@ -13,20 +10,16 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./filter-dialog.component.css'],
   standalone: true,
   imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatButtonModule
+    CommonModule,
+    ReactiveFormsModule // Importando ReactiveFormsModule
   ]
 })
 export class FilterDialogComponent {
   filterForm: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<FilterDialogComponent>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<FilterDialogComponent>
   ) {
     this.filterForm = this.fb.group({
       clienteDe: ['', [Validators.required, Validators.maxLength(6)]],
@@ -50,7 +43,7 @@ export class FilterDialogComponent {
   }
 
   cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close(null);
   }
 
   resetAndClose() {
@@ -58,7 +51,7 @@ export class FilterDialogComponent {
     this.dialogRef.close({
       clienteDe: '000000',
       clienteAte: 'zzzzzz',
-      dataDe: '20000101',
+      dataDe: '20230101',
       dataAte: this.formatDate(today.toISOString().split('T')[0])
     });
   }

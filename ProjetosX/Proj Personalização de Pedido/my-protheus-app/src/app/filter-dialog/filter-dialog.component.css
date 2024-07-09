@@ -1,22 +1,24 @@
-:host {
+.dialog {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    width: 350px; /* Ajuste a largura conforme necessário */
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-mat-dialog-title {
+.dialog-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    position: relative;
 }
 
 .close-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
     background: none;
     border: none;
     cursor: pointer;
@@ -24,55 +26,35 @@ mat-dialog-title {
     font-size: 20px;
 }
 
-mat-dialog-content {
+.dialog-content {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-mat-form-field {
-    width: 100%;
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
-mat-form-field.appearance-fill .mat-form-field-flex {
-    background-color: #f5f5f5;
+.form-field label {
+    font-weight: bold;
+}
+
+.form-field input {
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-mat-form-field.mat-focused .mat-form-field-ripple {
-    background-color: #3f51b5;
-}
-
-mat-form-field.mat-form-field-appearance-fill .mat-form-field-outline {
-    border-color: #3f51b5;
-}
-
-mat-form-field.mat-form-field-appearance-fill .mat-form-field-outline-thick {
-    border-color: #3f51b5;
-}
-
-mat-form-field .mat-form-field-label {
-    color: #3f51b5;
-}
-
-mat-form-field .mat-form-field-label.mat-form-field-empty.mat-form-field-empty.mat-form-field-floating {
-    color: rgba(63, 81, 181, 0.6);
-}
-
-mat-form-field .mat-form-field-underline .mat-form-field-ripple {
-    background-color: #3f51b5;
-}
-
-mat-error {
-    font-size: 12px;
-    color: #f44336;
-}
-
-mat-dialog-actions {
+.dialog-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    width: 100%;
+    margin-top: 20px;
 }
 
 button {
@@ -92,10 +74,9 @@ button:hover {
 button:disabled {
     background-color: #90bcff;
     color: #000000;
-    
     cursor: not-allowed;
 }
-.Trazer {
-    background-color: rgb(192, 192, 192);
-    margin-left: 10px;
+
+.bring-all-button {
+    background-color: #c0c0c0;
 }

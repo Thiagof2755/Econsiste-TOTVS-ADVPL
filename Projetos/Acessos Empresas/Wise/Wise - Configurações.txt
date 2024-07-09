@@ -1,0 +1,136 @@
+Rafael - atualizar drop 
+
+Patricia Laveso
+Supervisora de TI
+Tel. (11) 3183-5230 Ramal 5210
+Cel. (11) 97544-3464
+
+=====================================
+ CONEXAO EXTERNA
+=====================================
+
+1.	Instalar Net Extender. (Enviado em anexo) Caso tenha algum problema no envio o exe, também foi compartilhar no Google drive.
+2.  Instalar o pacote NetExtender.8.0.241.msi
+3.	Executa-lo e preencher conforme informações abaixo:
+Server: 186.209.52.106(Preferencialmente) ou 189.14.87.162
+
+Dominio: wisewood
+Usuário: econsiste.projeto (Rafael)
+Senha: Projeto2020*
+
+Dominio: wisewood
+Username: econsiste.roberval
+Senha: Roberval2020*
+
+Dominio: wisewood
+Username: econsiste.projeto1 (Java)
+Senha: Projeto12020*
+ 
+Dominio: wisewood
+Username: econsiste.projeto2 (Rudson / Gilvan)
+Senha: Projeto22020*
+
+
+4.	Ai só precisa iniciar uma conexão de área de trabalho remota com o WSERVER5(10.10.10.9)
+
+=====================================
+Acessar pelo Net Extender, com o mesmo usuário de hoje, pelo conexão remota:
+ 
+Sevidor: 10.10.0.5
+Usuário: wise\administrador
+Senha: WW951753&*!
+
+Usuário: wise\Econsiste
+Senha: #Ec0ns1st3@2020!@#
+
+Usuário: SERVERAP\Econsiste
+Senha: #Ec0ns1st3@2020!@#
+
+Usuário: WISE\econsiste.projeto
+Senha: 1q2y147*
+
+=====================================
+ CONEXAO Protheus
+=====================================
+Base teste E:\Protheus12 
+
+usuario : admin
+senha   : 951753
+
+Usuario: eco.leandrom   
+Senha: 147369
+
+patricia.laveso
+Pp130806+
+
+Base produção P:\Totvs
+------------------------------------- 
+Acesso Protheus: econsiste.leandro
+Senha: Wise2021
+
+usuario : admin
+senha   : 147369
+
+------------------------------------- 
+Username: econsiste.emerson
+Senha: Wise2019*
+Senha: Wise2019*
+Domain: Wisewood
+
+====================================
+ Projeto Protheus
+=====================================
+P:\Totvs12\Microsiga\Protheus\my projects\Wise
+**Utilizar o Git do Dev Azure.
+
+URL: https://wisewood@dev.azure.com/wisewood/Protheus%20-%20Wise/_git/Protheus%20-%20Wise
+ti@wisewood.com.br
+Wise2020!@#
+
+====================================
+BANCO SQL
+=====================================
+Server: 10.10.0.5
+Usuário: sa
+Senha: @666#@*DDconn
+
+====================================
+ VBA EXCEL
+=====================================
+Senha VBA: W1s3Pl@st1cos
+
+====================================
+ ABERTURA DE CHAMADOS
+=====================================
+usuario: patricia.laveso@wisewood.com.br
+senha: Pp06071988*
+
+CPF: 369.549.248-14
+Senha: 060788
+
+================================================
+ Code Analysis – Verificar o do dia 17/09 (Wise)
+================================================
+ti@wise.eco.br
+Wise2019*
+
+wise TotvsID
+1f672270106b43088E1A62d1ec001f58
+bd92f53ec3e3400092DDae18ee5ae20c
+
+====================================
+ ABERTURA DE CHAMADOS
+=====================================
+Modelo: Waytech
+Usuario: admin
+Senha: admin
+IP: 10.10.0.12
+IP: 10.10.0.13
+
+MOdelo: Toledo
+
+===================
+wifi
+===================
+rede:WisePlasticos
+senha: Wise2019!@#
