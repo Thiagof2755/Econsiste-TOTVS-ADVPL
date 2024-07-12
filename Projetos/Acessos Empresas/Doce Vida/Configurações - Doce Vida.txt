@@ -26,7 +26,7 @@ Windows := 10.1.1.60 (seria o novo servidor não finalizado como avia dito) cone
 
 Usr : emerson.martins@srvap.docevidaalimentos.com.br 
     : DOCEVIDA\emerson.martins
-       Pss : Dva@eco01
+       Pss : Conti@2400
 
 Usr : docevida\roberval.cunha
        Pss : Dv@#2021!@#

@@ -19,7 +19,7 @@ Local oFont
 Local xRet := .T.
 Local xDtBase := dDatabase
 Local oButton
-Local cArqTrab := ""
+private cArqTrab := "XMLTRB"
 Private lQuiet := .F.
 Private oPanel
 Private oSay
@@ -37,7 +37,7 @@ Private lImpAut := .F.
 Default xPar4 := ""
 Default xPar5 := ""
 If xPar4 != "LOTE"
-	u_CriaTrab(@cArqTrab)
+			u_CriaTrab(@cArqTrab)
 	DEFINE FONT oFont NAME "MonoAs" SIZE 0, -16 BOLD
 	DEFINE MSDIALOG oDlg FROM 0,0 TO 125, 400 TITLE "Saída XML" PIXEL
 	@005,005 Say "Informe Chave da NF (nome do arquivo):" of oDlg Pixel
@@ -167,8 +167,8 @@ cPathXml := GetMv("MV_XARQXML")
 lChkDANFE := u_PesqDANFE(cChave, cPathXml) // Pesquisa Chave
 If lChkDANFE
 	_tipoNF := "D" // DANFE
-	cXml    := XMLTRB->XML
-	cFile   := lower( cPathXml + XMLTRB->ARQUIVO )
+	cXml    := (cArqTrab)->XML
+	cFile   := lower( cPathXml + (cArqTrab)->ARQUIVO )
 Else
 	cFile   := ""
 	If Right(cChave, 4) == ".XML" .Or. Right(cChave, 4) == ".TXT"
@@ -365,91 +365,91 @@ if _tipoNF == "D"
 	EndIf
 	EndIf
 	*/
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_NNF:TEXT") != "U" // Numero do Documento
-		aChvInfo[03] := Replicate("0",09) + AllTrim(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_NNF:TEXT)
-		aChvInfo[03] := Right(aChvInfo[03],09)
-	EndIf
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_SERIE:TEXT") != "U" // Série do Documento
-		aChvInfo[04] := PadR(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_SERIE:TEXT,03)
-	EndIf
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_ID:TEXT") != "U" // Chave DANFE
-		aChvInfo[11] := substr(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_ID:TEXT,04)
-	EndIf
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_EMIT:_CNPJ:TEXT") != "U" // CNPJ Emitente
-		xTemp := aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_EMIT:_CNPJ:TEXT
-		If xTemp != SM0->M0_CGC
-			// DESCOMENTAR NO CLIENTE
-			If !lQuiet
-				cProblema := "Documento não é deste CNPJ!"
-				oSay:Refresh()
-			EndIf
-			aSize(aChvInfo,0)
-			Return .F.
-		EndIf
-		_cCgcEmi := xTemp
-	EndIf
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dEmi:TEXT") != "U" // Emissão
-		aChvInfo[05] := StoD(StrTran(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dEmi:TEXT,"-",""))
-		dDatabase := aChvInfo[05]
-	EndIf
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dhEmi:TEXT") != "U" // Emissão
-		aChvInfo[05] := StoD(StrTran(Left(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dhEmi:TEXT,10),"-",""))
-		dDatabase := aChvInfo[05]
-	EndIf
-	If u_TrataSE4() // Cond.Pagto (default: 000 - a Vista )
-		aChvInfo[10] := SE4->E4_CODIGO
-	Else
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_NNF:TEXT") != "U" // Numero do Documento
+	aChvInfo[03] := Replicate("0",09) + AllTrim(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_NNF:TEXT)
+	aChvInfo[03] := Right(aChvInfo[03],09)
+EndIf
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_SERIE:TEXT") != "U" // Série do Documento
+	aChvInfo[04] := PadR(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_SERIE:TEXT,03)
+EndIf
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_ID:TEXT") != "U" // Chave DANFE
+	aChvInfo[11] := substr(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_ID:TEXT,04)
+EndIf
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_EMIT:_CNPJ:TEXT") != "U" // CNPJ Emitente
+	xTemp := aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_EMIT:_CNPJ:TEXT
+	If xTemp != SM0->M0_CGC
+		// DESCOMENTAR NO CLIENTE
 		If !lQuiet
+			cProblema := "Documento não é deste CNPJ!"
 			oSay:Refresh()
 		EndIf
 		aSize(aChvInfo,0)
 		Return .F.
 	EndIf
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CNPJ:TEXT") != "U" // CNPJ Destinatário
-		cCNPJ := PadR(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CNPJ:TEXT,14)
+	_cCgcEmi := xTemp
+EndIf
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dEmi:TEXT") != "U" // Emissão
+	aChvInfo[05] := StoD(StrTran(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dEmi:TEXT,"-",""))
+	dDatabase := aChvInfo[05]
+EndIf
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dhEmi:TEXT") != "U" // Emissão
+	aChvInfo[05] := StoD(StrTran(Left(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_dhEmi:TEXT,10),"-",""))
+	dDatabase := aChvInfo[05]
+EndIf
+If u_TrataSE4() // Cond.Pagto (default: 000 - a Vista )
+	aChvInfo[10] := SE4->E4_CODIGO
+Else
+	If !lQuiet
+		oSay:Refresh()
+	EndIf
+	aSize(aChvInfo,0)
+Return .F.
+EndIf
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CNPJ:TEXT") != "U" // CNPJ Destinatário
+	cCNPJ := PadR(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CNPJ:TEXT,14)
+Else
+	cCNPJ := Space(14)
+EndIf
+If Empty(AllTrim(cCNPJ))
+	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CPF:TEXT") != "U"
+		cCNPJ := PadR(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CPF:TEXT,11)
 	Else
-		cCNPJ := Space(14)
+		cCNPJ := Space(11)
 	EndIf
-	If Empty(AllTrim(cCNPJ))
-		If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CPF:TEXT") != "U"
-			cCNPJ := PadR(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_DEST:_CPF:TEXT,11)
-		Else
-			cCNPJ := Space(11)
-		EndIf
-	EndIf
-	_cCgcDes := cCNPJ
-	SA1->(DbSetOrder(3)) // A1_FILIAL + A1_CGC
-	If SA1->(!DbSeek(xFilial("SA1") + cCNPJ,.F.))
-		If !u_CriarSA1()
-			If !lQuiet
-				cProblema := "Não foi possível criar Cliente!"
-				oSay:Refresh()
-			EndIf
-			aSize(aChvInfo,0)
-			Return .F.
-		EndIf
-	EndIf
-	aChvInfo[06] := SA1->A1_COD				// Cliente
-	aChvInfo[07] := SA1->A1_LOJA			// Loja
-	aChvInfo[09] := SA1->A1_EST				// UF
-	If lChkExist() // Checar existencia da NF se existir informar e bloquear
-		aSize(aChvInfo,0)
-		Return .F.
-	EndIf
-	// Indica se é operação com consumidor final
-	If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_INDFINAL:TEXT") != "U"
-		lOpConsFin := AllTrim(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_INDFINAL:TEXT) == "1"
-	Else
-		lOpConsFin := .F.
-	EndIf
-	If !u_TrataSB1() // Tratamento Produtos e Impostos
+EndIf
+_cCgcDes := cCNPJ
+SA1->(DbSetOrder(3)) // A1_FILIAL + A1_CGC
+If SA1->(!DbSeek(xFilial("SA1") + cCNPJ,.F.))
+	If !u_CriarSA1()
 		If !lQuiet
+			cProblema := "Não foi possível criar Cliente!"
 			oSay:Refresh()
 		EndIf
 		aSize(aChvInfo,0)
 		Return .F.
 	EndIf
-	CargaImp() // carrega Tag Impostos total do XML
+EndIf
+aChvInfo[06] := SA1->A1_COD				// Cliente
+aChvInfo[07] := SA1->A1_LOJA			// Loja
+aChvInfo[09] := SA1->A1_EST				// UF
+If lChkExist() // Checar existencia da NF se existir informar e bloquear
+	aSize(aChvInfo,0)
+Return .F.
+EndIf
+// Indica se é operação com consumidor final
+If Type("aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_INDFINAL:TEXT") != "U"
+	lOpConsFin := AllTrim(aChvInfo[15]:_NFEPROC:_NFE:_INFNFE:_IDE:_INDFINAL:TEXT) == "1"
+Else
+	lOpConsFin := .F.
+EndIf
+If !u_TrataSB1() // Tratamento Produtos e Impostos
+	If !lQuiet
+		oSay:Refresh()
+	EndIf
+	aSize(aChvInfo,0)
+Return .F.
+EndIf
+CargaImp() // carrega Tag Impostos total do XML
 EndIf
 // G I N F E S
 If _tipoNF == "G"

@@ -15,12 +15,12 @@ Local oChave
 Local cChave    := Space(50)
 Local oFont
 Local oButton
-Local cArqTrab
 Local aCabec    := {}
 Local aItens    := {}
 Local aLinha    := {}
 Local nX        := 0
 Local cChvRef   := ""
+Private cArqTrab	:= "XMLTRB"
 Private lQuiet  := .F.
 Private oPanel
 Private oSay
@@ -42,7 +42,7 @@ Default xPar5     := ""
 //ConOut("GetChvNfe: " + DtoC(Date()) + " " + Time() + " " + cUserName + " Iniciando...")
 U_LogAlteracoes("GetChvNfe"," Iniciando...")
 If xPar4 != "LOTE"
-	If Select("XMLTRB") == 0
+	If Select(cArqTrab) == 0
 		u_CriaTrab(@cArqTrab)
 	EndIf
 	DEFINE FONT oFont  NAME "MonoAs" SIZE 0, -16 BOLD
@@ -248,8 +248,8 @@ cPathXml  := getMV("MV_XARQXML")
 lChkDANFE := u_PesqDANFE( cChave, cPathXml )		// Pesquisa Chave
 if lChkDANFE
 	_tipoNF := "D"									// DANFE
-	cXml    := XMLTRB->XML
-	cFile   := lower( cPathXml + XMLTRB->ARQUIVO )
+	cXml    := (cArqTrab)->XML
+	cFile   := lower( cPathXml + (cArqTrab)->ARQUIVO )
 else
 	cFile   := ""
 	if right( cChave, 4 ) == ".XML" .or. right( cChave, 4 ) == ".TXT"

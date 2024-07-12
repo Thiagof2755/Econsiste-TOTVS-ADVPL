@@ -270,11 +270,11 @@ If Empty(cProblema) // Sem problemas
 		cCond := ""
 		For nI := 1 To Len(aItens)
 			If Empty(cProblema) // Sem problemas
-				If ztipo("aItens[nI]:_dVenc:TEXT") == "U"
+				If u_ztipo("aItens[nI]:_dVenc:TEXT") == "U"
 					cProblema := "Não encontrado Vencimento da dupl: " + Alltrim(Str(nI))
 					// Return .F.
 				EndIf
-				If ztipo("aItens[nI]:_vDup:TEXT") == "U"
+				If u_ztipo("aItens[nI]:_vDup:TEXT") == "U"
 					cProblema := "Não encontrado Valor da dupl: " + Alltrim(Str(nI))
 					// Return .F.
 				EndIf
@@ -482,7 +482,7 @@ If _tipoNF == "D" // DANFE
 			xCEST   := ""
 			xFRETE  := 0
 			aImpost := {} // impostos { ICMS, IPI, PIS, COFINS }
-			If ztipo("aItens[nI]:_Prod:_cProd:TEXT") != "U"
+			If u_ztipo("aItens[nI]:_Prod:_cProd:TEXT") != "U"
 				xProd := aItens[nI]:_Prod:_cProd:TEXT
 				//if len( xProd ) > len( SB1->B1_COD )
 				//xProd := right( alltrim( xProd ), len( SB1->B1_COD ) )
@@ -490,15 +490,15 @@ If _tipoNF == "D" // DANFE
 				xProd := SubStr(xProd, Len(xProd)- TamSX3("B1_COD")[1],TamSX3("B1_COD")[1])
 				//endif
 			EndIf
-			If ztipo("aItens[nI]:_Prod:_NCM:TEXT") != "U"
+			If u_ztipo("aItens[nI]:_Prod:_NCM:TEXT") != "U"
 				xNCM := aItens[nI]:_Prod:_NCM:TEXT
 			EndIf
-			if ztipo("aItens[nI]:_Prod:_cEAN:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_cEAN:TEXT") != "U"
 				IF !("SEM" $ aItens[nI]:_Prod:_cEAN:TEXT)
 					xCodBar := aItens[nI]:_Prod:_cEAN:TEXT
 				ENDIF
 			EndIf
-			if Empty(xCodBar) .and. ztipo("aItens[nI]:_Prod:_cEANtrib:TEXT") != "U"
+			if Empty(xCodBar) .and. u_ztipo("aItens[nI]:_Prod:_cEANtrib:TEXT") != "U"
 				IF !("SEM" $ aItens[nI]:_Prod:_cEANtrib:TEXT)
 					xCodBar := aItens[nI]:_Prod:_cEANtrib:TEXT
 				ENDIF
@@ -513,51 +513,51 @@ If _tipoNF == "D" // DANFE
 				cProblema := "Produto Item ["+Alltrim(Str(nI))+"] está sem os Códigos"
 				return .F.
 			endif
-			if ztipo("aItens[nI]:_Prod:_xProd:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_xProd:TEXT") != "U"
 				xDescri := LimpaSPC( aItens[nI]:_Prod:_xProd:TEXT )
 			endif
-			if ztipo("aItens[nI]:_Prod:_CFOP:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_CFOP:TEXT") != "U"
 				xCFOP := PadR(aItens[nI]:_Prod:_CFOP:TEXT, len( SF4->F4_CF ) )
 			endif
-			if ztipo("aItens[nI]:_Prod:_uCom:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_uCom:TEXT") != "U"
 				xUM := aItens[nI]:_Prod:_uCom:TEXT
 			endif
-			if Empty(xUM) .and. ztipo("aItens[nI]:_Prod:_uTrib:TEXT") != "U"
+			if Empty(xUM) .and. u_ztipo("aItens[nI]:_Prod:_uTrib:TEXT") != "U"
 				xUM := aItens[nI]:_Prod:_uTrib:TEXT
 			endif
-			if ztipo("aItens[nI]:_Prod:_qCom:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_qCom:TEXT") != "U"
 				xQtd := Val( aItens[nI]:_Prod:_qCom:TEXT )
 			endif
-			if xQtd == 0 .and. ztipo("aItens[nI]:_Prod:_qTrib:TEXT") != "U"
+			if xQtd == 0 .and. u_ztipo("aItens[nI]:_Prod:_qTrib:TEXT") != "U"
 				xQtd := Val( aItens[nI]:_Prod:_qTrib:TEXT )
 			endif
-			if ztipo("aItens[nI]:_Prod:_vUnCom:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_vUnCom:TEXT") != "U"
 				xVunit := Val( aItens[nI]:_Prod:_vUnCom:TEXT )
 			endif
-			if xVunit == 0 .and. ztipo("aItens[nI]:_Prod:_vUnTrib:TEXT") != "U"
+			if xVunit == 0 .and. u_ztipo("aItens[nI]:_Prod:_vUnTrib:TEXT") != "U"
 				xVunit := Val( aItens[nI]:_Prod:_vUnTrib:TEXT )
 			endif
-			if ztipo("aItens[nI]:_Prod:_vProd:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_vProd:TEXT") != "U"
 				xVtotal := Val( aItens[nI]:_Prod:_vProd:TEXT )
 			endif
-			if ztipo("aItens[nI]:_Prod:_vDesc:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_vDesc:TEXT") != "U"
 				xVdesc := Val( aItens[nI]:_Prod:_vDesc:TEXT )
 			endif
-			if ztipo("aItens[nI]:_Prod:_CEST:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_CEST:TEXT") != "U"
 				xCEST := aItens[nI]:_Prod:_CEST:TEXT
 			endif
-			if ztipo("aItens[nI]:_Prod:_vFrete:TEXT") != "U"
+			if u_ztipo("aItens[nI]:_Prod:_vFrete:TEXT") != "U"
 				xFRETE := aItens[nI]:_Prod:_vFrete:TEXT
 			endif
 			// Alteracao trecho (Jonathan 26/06/2019) Obtencao do Percentual de IPI tributado
-			If ztipo("aItens[nI]:_Imposto:_Ipi:_IPITrib:_PIPI:TEXT") != "U"
+			If u_ztipo("aItens[nI]:_Imposto:_Ipi:_IPITrib:_PIPI:TEXT") != "U"
 				xPIpi := Val( aItens[nI]:_Imposto:_Ipi:_IPITrib:_PIPI:TEXT )
 			EndIf
 			
 			nRecnoB1 := BuscaSB1( xProd, xNCM, xCodBar, xDescri, xNCM, xPIpi ) // Incluido IPI
 			u_NFImpAut(Iif(isInCallStack("U_GETCHVNFE"), "E", "S"), _cCgcEmi, _cCgcDes, xCFOP)
 			// chamada da tratativa dos Impostos
-			if ztipo("aItens[nI]:_imposto") != "U"
+			if u_ztipo("aItens[nI]:_imposto") != "U"
 				aImpost := TratImp(aItens[nI]:_imposto, xCFOP, xNCM, xDescri, @lAborta, xProd)
 				If lAborta
 					Return .F.
@@ -923,14 +923,14 @@ For nTabIcms := 1 To Len(aTabIcms)
 	aDadosSX5 := FWGetSX5(aTabIcms[nTabIcms])
 	for nI := 1 to Len(aDadosSX5)
 		cTmpTagICM := "oImp:_ICMS:_ICMS" + Alltrim(aDadosSX5[nI][3])
-		If ztipo(cTmpTagICM) != "U"
-			If ztipo(cTmpTagICM + ":_orig:TEXT") != "U"
+		If u_ztipo(cTmpTagICM) != "U"
+			If u_ztipo(cTmpTagICM + ":_orig:TEXT") != "U"
 				xOrigem := &(cTmpTagICM + ":_orig:TEXT")
 			EndIf
 			Exit
 		EndIf
 	Next
-	If ztipo(cTmpTagICM) != "U"
+	If u_ztipo(cTmpTagICM) != "U"
 		Exit
 	EndIf
 Next
@@ -1137,13 +1137,13 @@ If _tipoNF $ "D;CTE"
 			aDadosSX5 := FWGetSX5(aTabIcms[nTabIcms])
 			for nI := 1 to Len(aDadosSX5)
 				cTmpTagICM := "oImp:_ICMS:_ICMS" + Alltrim(aDadosSX5[nI][3])
-				If ztipo(cTmpTagICM) != "U"
+				If u_ztipo(cTmpTagICM) != "U"
 					Exit
 				Else
 					cTmpTagICM := ""
 				EndIf
 			Next
-			If ztipo(cTmpTagICM) != "U"
+			If u_ztipo(cTmpTagICM) != "U"
 				Exit
 			EndIf
 		Next
@@ -1194,7 +1194,7 @@ If _tipoNF $ "D;CTE"
 		cTmpTagIPI := ""
 		For nX := 1 To Len(aOpcTagIPI)
 			cTmpTagIPI := "oImp:_IPI:" + aOpcTagIPI[nX]
-			If ztipo(cTmpTagIPI) == "O"
+			If u_ztipo(cTmpTagIPI) == "O"
 				Exit
 			Else
 				cTmpTagIPI := ""
@@ -1221,7 +1221,7 @@ If _tipoNF $ "D;CTE"
 		cTmpTagPIS := ""
 		For nX := 1 To Len(aOpcTagPIS)
 			cTmpTagPIS := "oImp:_PIS:" + aOpcTagPIS[nX]
-			If ztipo(cTmpTagPIS) == "O"
+			If u_ztipo(cTmpTagPIS) == "O"
 				Exit
 			Else
 				cTmpTagPIS := ""
@@ -1248,7 +1248,7 @@ If _tipoNF $ "D;CTE"
 		cTmpTagCOF := ""
 		For nX := 1 To Len(aOpcTagCOF)
 			cTmpTagCOF := "oImp:_COFINS:" + aOpcTagCOF[nX]
-			If ztipo(cTmpTagCOF) == "O"
+			If u_ztipo(cTmpTagCOF) == "O"
 				Exit
 			Else
 				cTmpTagCOF := ""
@@ -1776,13 +1776,13 @@ User Function GETLOTNF(xPar1, xPar2, xPar3, xPar4, xPar5)
 Local cFolder
 Local aArqTmp
 Local nI
-Local cArqTrab
 Local aRet
 Local xRet
 Local cPerg := "XMLCTB"
 Local aAreaXML
 Local lSimTodos := .F.
 Local nRetAvis := 0
+private cArqTrab := "XMLTRB"
 Private lQuiet := .T.
 Private cFolder := U_PEchvNFE( "PATHXML" )
 Private nJaLidos := 0
@@ -1795,7 +1795,7 @@ PutMv("MV_XARQXML", cFolder)
 If Left(cFolder, 1) == "\"
 	cFolder := SubStr(cFolder, Len(cFolder) - 1)
 EndIf
-u_CriaTrab(@cArqTrab)
+		u_CriaTrab(@cArqTrab)
 If Aviso("Importação XML em Lote", "Somente DANFE ou todos os arquivos?", {"DANFE", "Todos"}) == 1
 	Processa( {|| aRet := u_PreLoad( cFolder, "", .T. )}, "Aguarde, carregando arquivos da pasta", "Iniciando processo...")
 	If aRet[1] == 0
@@ -1811,35 +1811,35 @@ If Aviso("Importação XML em Lote", "Somente DANFE ou todos os arquivos?", {"DANF
 		endif
 		if lContinua
 			if MV_PAR01 == 1
-				//XMLTRB->( dbSetOrder(6) )	// Emissao DESC
-				XMLTRB->( dbSetOrder(5) )
+				//(cArqTrab)->( dbSetOrder(6) )	// Emissao DESC
+				(cArqTrab)->( dbSetOrder(5) )
 			elseif MV_PAR01 == 2
-				XMLTRB->( dbSetOrder(5) )	// Emissao
+				(cArqTrab)->( dbSetOrder(5) )	// Emissao
 			elseif MV_PAR01 == 3
-				XMLTRB->( dbSetOrder(4) )	// Destinatário
+				(cArqTrab)->( dbSetOrder(4) )	// Destinatário
 			else
-				XMLTRB->( dbSetOrder(3) )	// Emissor
+				(cArqTrab)->( dbSetOrder(3) )	// Emissor
 			endif
-			XMLTRB->( dbGotop() )
+			(cArqTrab)->( dbGotop() )
 			nI := 0
-			while ! XMLTRB->( EOF() )
+			while ! (cArqTrab)->( EOF() )
 				nI++
 				aAreaXML := getArea()
 				if isInCallStack("MATA410") .or. isInCallStack("MATA920")
-					xRet := U_GETCHVSNF( xPar1, xPar2, xPar3, "LOTE", XMLTRB->ARQUIVO )
+					xRet := U_GETCHVSNF( xPar1, xPar2, xPar3, "LOTE", (cArqTrab)->ARQUIVO )
 					if ! xRet
 						msgAlert("Ocorreu erro na importação, processo encerrado!")
 						exit
 					endif
 				else
 					cMsg := "Arquivo "+ Alltrim(Str(nI))+" / "+Alltrim(Str( aRet[1] )) + CRLF
-					cMsg += alltrim(XMLTRB->DOCUMENTO)
-					cMsg += " - Emissão: "+ DtoC(XMLTRB->EMISSAO) + CRLF
-					cMsg += "Emissor: "+ XMLTRB->EMISNOME + CRLF
-					if len(alltrim(XMLTRB->EMISSOR)) == 14
-						cMsg += "CNPJ: "+ Transform(XMLTRB->EMISSOR, "@R 99.999.999/9999-99")
+					cMsg += alltrim((cArqTrab)->DOCUMENTO)
+					cMsg += " - Emissão: "+ DtoC((cArqTrab)->EMISSAO) + CRLF
+					cMsg += "Emissor: "+ (cArqTrab)->EMISNOME + CRLF
+					if len(alltrim((cArqTrab)->EMISSOR)) == 14
+						cMsg += "CNPJ: "+ Transform((cArqTrab)->EMISSOR, "@R 99.999.999/9999-99")
 					else
-						cMsg += "CPF: " + Transform(XMLTRB->EMISSOR, "@R 999.999.999-99")
+						cMsg += "CPF: " + Transform((cArqTrab)->EMISSOR, "@R 999.999.999-99")
 					endif
 					cMsg += CRLF + CRLF + "Continua importação?"
 					If !(lSimTodos)
@@ -1855,14 +1855,14 @@ If Aviso("Importação XML em Lote", "Somente DANFE ou todos os arquivos?", {"DANF
 					/*
 					aAreaXML := getArea()
 					if isInCallStack("MATA410")
-					U_GETCHVSNF( xPar1, xPar2, xPar3, "LOTE", XMLTRB->ARQUIVO )
+					U_GETCHVSNF( xPar1, xPar2, xPar3, "LOTE", (cArqTrab)->ARQUIVO )
 					else
 					*/
-					u_GETCHVNFE( xPar1, xPar2, xPar3, "LOTE", XMLTRB->ARQUIVO )
+					u_GETCHVNFE( xPar1, xPar2, xPar3, "LOTE", (cArqTrab)->ARQUIVO )
 					// endif
 				EndIf
 				RestArea(aAreaXML)
-				XMLTRB->( dbSkip() )
+				(cArqTrab)->( dbSkip() )
 			End
 		EndIf
 	EndIf
@@ -1885,7 +1885,7 @@ Else
 			EndIf
 			/*
 			if isInCallStack("MATA410")
-			U_GETCHVSNF( xPar1, xPar2, xPar3, "LOTE", aArqTmp[nI,1] )
+			( xPar1, xPar2, xPar3, "LOTE", aArqTmp[nI,1] )
 			else
 			*/
 			U_GETCHVNFE( xPar1, xPar2, xPar3, "LOTE", aArqTmp[nI,1] )
@@ -1928,11 +1928,11 @@ User Function CriaTrab(cArqTrab)
 
     oTempTable:SetFields(aStru)
 
-    If Select("XMLTRB") == 0
-        Final("Não foi possível fazer a pré-carga dos XMLs")
-    EndIf
+    // If Select("XMLTRB") == 0
+    //     //Final("Não foi possível fazer a pré-carga dos XMLs")
+    // EndIf
 	
-	oTempTable:AddIndex( "XMLTRB_5", {"DtoS(EMISSAO)"} )
+	oTempTable:AddIndex( "XMLTRB_5", {"EMISSAO"} )
 	oTempTable:AddIndex( "XMLTRB_4", {"DESTINA"} )
 	oTempTable:AddIndex( "XMLTRB_3", {"EMISSOR"} )
 	oTempTable:AddIndex( "XMLTRB_2", {"CHAVE"} )
@@ -1943,7 +1943,11 @@ User Function CriaTrab(cArqTrab)
 Return
 
 User Function killTrab( cArqTrab )
-	cArqTrab:Delete()
+	//cArqTrab:Delete()
+	if Select(cArqTrab) > 0
+            XMLTRB->(dbCloseArea())
+        Endif
+
 Return
 
 User Function PreLoad( cFolder, cChave, lLote )
@@ -1958,7 +1962,7 @@ EndIf
 If !lLote .And. !Empty(cChave)
 	Return
 EndIf
-DbSelectArea("XMLTRB")
+DbSelectArea(cArqTrab)
 ZAP
 If left( cFolder, 1) == "\"
 	cFolder := substr( cFolder, len(cFolder)-1 )
@@ -1970,7 +1974,7 @@ For nI := 1 to Len( aArqTmp )
 	aTemp := destrincha( cFolder + aArqTmp[nI,1] )
 	if len( aTemp ) > 0
 		nDanfe++
-		dbSelectArea("XMLTRB")
+		dbSelectArea(cArqTrab)
 		dbSetOrder(2)			// pela Chave da DANFE
 		if ! dbSeek( aTemp[1] )
 			dbAppend()
@@ -1994,8 +1998,8 @@ if ! empty(cChave) .and. ! MsgYesNo("Deseja manter a Chave selecionada?"+CRLF+cC
 	cChave := Space(44)
 endif
 
-/*
-dbSelectArea("XMLTRB")
+/// daqui 
+dbSelectArea(cArqTrab)
 dbSetOrder(1)			// pelo nome do arquivo
 
 if ! dbSeek( Upper(cChave) )
@@ -2005,7 +2009,7 @@ if ! MsgYesNo("Deseja manter a Chave selecionada?"+CRLF+cChave)
 cChave := Space(44)
 endif
 endif
-*/
+/// daqui 
 
 Return { nDanfe, nNF }
 
@@ -2095,13 +2099,13 @@ Local xTemp    := Upper( alltrim(cPasta) + alltrim(cPesq) )
 Local aArea	   := {}
 default cPesq  := ""
 default cPasta := ""
-If select("XMLTRB") == 0
+If select(cArqTrab) == 0
 	MsgStop("Falha na abertura do arquivo.","Atenção!")
 	Return .F.
 EndIf
-aArea := XMLTRB->(GetArea())
-DbSelectArea("XMLTRB")
-XMLTRB->(DbSetOrder(1)) // ARQUIVO
+aArea := (cArqTrab)->(GetArea())
+DbSelectArea(cArqTrab)
+(cArqTrab)->(DbSetOrder(1)) // ARQUIVO
 For nI := 1 to 2			// 1=Arquivo, 2=Chave
 	If DbSeek( xTemp )
 		Return .T.
@@ -2546,7 +2550,7 @@ Static Function CpoObrig(cTabPesq)
     (cAliasTmp)->(DbGoTop())
     lRet := !(cAliasTmp)->(Eof())
     If lRet    
-		If (ztipo("M->" + GetSX3Cache(cTabPesq, "X3_CAMPO") != "U") .And. X3Obrigat(GetSX3Cache(cTabPesq, "X3_CAMPO")))
+		If (u_ztipo("M->" + GetSX3Cache(cTabPesq, "X3_CAMPO") != "U") .And. X3Obrigat(GetSX3Cache(cTabPesq, "X3_CAMPO")))
 			If Empty(&("M->" + GetSX3Cache(cTabPesq, "X3_CAMPO")))
 				lRet := .F.
 				Aviso("Campo Obrigatório", "O campo " + AllTrim(GetSX3Cache(cTabPesq, "X3_CAMPO")) + " do cadastro da TES não possui informação, Cadastre a TES manualmente!", {"OK"}, 2)

@@ -24,6 +24,7 @@ FWLogMsg(;
 
 return 
 
+
 User Function ztipo(cCampo)
 Return Type(cCampo)
 
