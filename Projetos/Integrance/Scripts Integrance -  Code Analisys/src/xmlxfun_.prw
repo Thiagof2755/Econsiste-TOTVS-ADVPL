@@ -47,7 +47,35 @@ If laCols
 EndIf
 &(__READVAR) := xValor
 If lValid
-	lRetVal := CheckSX3(cCampo, xValor)
+	//lRetVal := CheckSX3(cCampo, xValor)
+
+	 //Busca as validações do campo
+    cVldSis := GetSX3Cache(cCampo, "X3_VALID")
+	//Chama a validação do sistema
+	If ! Empty(cVldSis)
+		if cCampo == "C6_QTDVEN"
+		//RegToMemory("SC6",.T.,.F.)
+			lRetVal := A410QTDGRA() 
+			if lRetVal
+				lRetVal := A410SegUm()
+			endif
+			if lRetVal
+				lRetVal := A410MultT()
+			endif
+			if lRetVal
+				lRetVal := a410Refr("C6_QTDVEN")
+			endif	
+		else
+			lRetVal := &(cVldSis)
+		endif
+	EndIf
+	if lRetVal
+		cVldUsr := GetSX3Cache(cCampo, "X3_VLDUSER")
+		//Chama a validação de usuário
+		If ! Empty(cVldUsr) .And. lRetVal
+			lRetVal := &(cVldUsr)
+		EndIf
+	endif
 EndIf
 If lRetVal .And. lGatilho .And. ExistTrigger(cCampo)
 	If laCols

@@ -141,7 +141,7 @@ Return xRet
 //-----------------------------------------
 Static Function ChkPath( cParam )
 	Local   aArea    := getArea()
-	// Local   aAreaSX3 := SX3->( getArea() )
+	Local   aAreaSX3 := SX3->( getArea() )
 	Local   cPath    := ""
 	Local   cParam01  := "MV_XARQXML"
 	Local   cParam02  := "MV_XCTAFOR"
@@ -165,7 +165,6 @@ Static Function ChkPath( cParam )
 	Local   nI, nJ
 	Default cParam    := ""
 
-	/*
 	SX3->( dbSetOrder(2) )
 	if SX3->( dbSeek( "F1_DOC" ) )
 		if ! "U_CARGASD1" $ Upper( SX3->X3_VALID )
@@ -175,7 +174,7 @@ Static Function ChkPath( cParam )
 		endif
 	endif
 
-	restArea( aAreaSX3 )*/
+	restArea( aAreaSX3 )
 
 	aAdd(aSX6,{ xFilial("SX6"), cParam01, "C", "Pasta de leitura dos arquivos XML", "Pasta de leitura dos arquivos XML", "Pasta de leitura dos arquivos XML", "", "", "", "", "", "", cPath   , cPath   , cPath   , "U", "N"})
 	aAdd(aSX6,{ xFilial("SX6"), cParam02, "C", "Conta Contabil cad.Fornecedor XML", "Conta Contabil cad.Fornecedor XML", "Conta Contabil cad.Fornecedor XML", "", "", "", "", "", "", ""      , ""      , ""      , "U", "N"})
@@ -213,8 +212,7 @@ Static Function ChkPath( cParam )
 
 			MsUnLock()
 		else
-			xTmp := padR( Alltrim( zGetmv(aSX6[nI]) ), len( zGetmv(aSX6[nI]) ) )
-
+			xTmp := padR( Alltrim( SX6->X6_CONTEUD ), len( SX6->X6_CONTEUD ) )
 			aSX6[nI, aScan( aEstrut, "X6_CONTEUD") ] := xTmp
 		EndIf
 	Next
@@ -362,7 +360,7 @@ Static Function ProdXfor()
 	Local cCodPro	:= ""
 	Local cTES		:= ""
 
-	If valtype(aChvInfo[20]) <> 'U' //Validação sobre o array
+	If valtype(aChvInfo[20]) <> U //Validação sobre o array
 		For nI := 1 To Len( aChvInfo[20] )
 			N := nI
 

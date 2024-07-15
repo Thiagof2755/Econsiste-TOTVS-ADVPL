@@ -54,16 +54,47 @@ PIS: cst,
 COFINS: cst,
 TES: record
 */
-
+RegToMemory("SC6",.T.,.F.)
+// RegToMemory("SC5",.T.,.F.)
+// RegToMemory("SB1",.T.,.F.)
 For nI := 1 To Len(aChvInfo[20])
 	aAdd(aCols, aClone(aNovo))
 	SB1->(DbGoto(aChvInfo[20][nI][1])) // Recno SB1
 	n := nI
+	aCols[n,GDFieldPos('C6_ITEM')] := StrZero(nI, 2)
+	aCols[n,GDFieldPos('C6_PRODUTO')] := SB1->B1_COD
+	aCols[n,GDFieldPos('C6_UM')] := SB1->B1_UM
+	aCols[n,GDFieldPos('C6_DESCRI')] := SB1->B1_DESC
+	aCols[n,GDFieldPos('C6_QTDVEN')] := aChvInfo[20][nI][8]
+
+	if aChvInfo[30,04] == 0 //Desconto do cabeçalho: = zero, aplico nos itens
+		nPrcUnit := aChvInfo[20][nI][9]
+		nPrcTot := (aChvInfo[20][nI][9] * aChvInfo[20][nI][8]) - aChvInfo[20][nI][11]
+		aCols[n,GDFieldPos('C6_PRCVEN')] := nPrcTot / aChvInfo[20][nI][8]
+		aCols[n,GDFieldPos('C6_VALDESC')] := aChvInfo[20][nI][11]
+	else
+		aCols[n,GDFieldPos('C6_PRCVEN')] := aChvInfo[20][nI][9]
+		aCols[n,GDFieldPos('C6_VALDESC')] := 0
+	endif
+
+	aCols[n,GDFieldPos('C6_QTDLIB')] := aChvInfo[20][nI][8]
+
+	SF4->(DbGoto(aChvInfo[20][nI][13][5])) // Recno SF4
+	If SF4->(Recno()) == aChvInfo[20][nI][13][5]
+		aCols[n,GDFieldPos('C6_TES')] := SF4->F4_CODIGO
+		aCols[n,GDFieldPos('C6_CLASFIS')] := CodSitTri()
+	EndIf
+	aCols[n,GDFieldPos('C6_LOCAL')] := SB1->B1_LOCPAD
+	If aChvInfo[20][nI][13][6] > 0 // é serviço
+		aCols[n,GDFieldPos('C6_ALIQISS')] := aChvInfo[20][nI][13][6]
+		aCols[n,GDFieldPos('C6_CODISS')] := aChvInfo[21]
+	EndIf
+	
+	// -------------------validação--------------------
 	xxx := u_fXMLcpo("C6_ITEM"   , StrZero(nI, 2))
 	xxx := u_fXMLcpo("C6_PRODUTO", SB1->B1_COD)
 	GdFieldPut("C6_UM"    , SB1->B1_UM)
 	GdFieldPut("C6_DESCRI", SB1->B1_DESC)
-	xxx := u_fXMLcpo("C6_QTDVEN" , aChvInfo[20][nI][8])
 	
 	if aChvInfo[30,04] == 0 //Desconto do cabeçalho: = zero, aplico nos itens
 		nPrcUnit := aChvInfo[20][nI][9]
@@ -75,6 +106,7 @@ For nI := 1 To Len(aChvInfo[20])
 		xxx := u_fXMLcpo("C6_VALDESC", 0)
 	endif
 	// xxx := u_fXMLcpo("C6_PRCVEN" , aChvInfo[20][nI][9])
+	xxx := u_fXMLcpo("C6_QTDVEN" , aChvInfo[20][nI][8])
 	
 	xxx := u_fXMLcpo("C6_QTDLIB" , aChvInfo[20][nI][8])
 	SF4->(DbGoto(aChvInfo[20][nI][13][5])) // Recno SF4

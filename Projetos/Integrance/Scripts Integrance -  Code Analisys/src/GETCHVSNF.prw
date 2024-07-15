@@ -43,7 +43,8 @@ If xPar4 != "LOTE"
 	@005,005 Say "Informe Chave da NF (nome do arquivo):" of oDlg Pixel
 	@015,005 Get oChave Var cChave Picture Replicate("X",50) Size 160, 10 Valid iif( fValChv( cChave ), oDlg:End(), nil ) of oDlg Pixel
 	@190,300 BUTTON "Nada" SIZE 040,015 OF oDlg PIXEL		// apenas para permitir a mudança de foco no objeto
-	@014,168 BUTTON oButton Prompt "Buscar" SIZE 30,13 OF oDlg PIXEL ACTION iif( fVincArq( @cChave ), iif( fValChv( cChave ), oDlg:End(), nil ), nil)
+	// @014,168 BUTTON oButton Prompt "Buscar" SIZE 30,13 OF oDlg PIXEL ACTION iif( fVincArq( @cChave ), iif( fValChv( cChave ), oDlg:End(), nil ), nil)
+	@014,168 BUTTON oButton Prompt "Buscar" SIZE 30,13 OF oDlg PIXEL ACTION iif( fVincArq( @cChave ), oDlg:End(), nil)
 	oPanel := TPanel():New(30, 00, "", oDlg, NIL, .T.,, nil, nil, oDlg:nWidth/2-1, 30)
 	tGroup():New(02,04,oPanel:nHeight/2-4, oPanel:nWidth/2-4,"Informações:",oPanel,,,.T.)
 	oSay := tSay():New(12,7,{|| cProblema},oPanel,,oFont,,,,.T.,CLR_RED,,oPanel:nWidth/2-7,10)
@@ -1180,8 +1181,8 @@ Local nX
 Local cTesSAIDA
 Local aCamposSC5  := {}
 Local aCAMPOSSC6  := {}
-Local lMsErroAuto
 Local aItens
+Private lMsErroAuto
 SF2->( dbSetOrder(1) )		// checar se a NF já existe!
 If SF2->( dbSeek( xFilial("SF2")+cDOC+cSERIE ) )
 	Return .F.
