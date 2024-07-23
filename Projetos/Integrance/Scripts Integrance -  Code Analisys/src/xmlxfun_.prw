@@ -53,14 +53,14 @@ If lValid
     cVldSis := GetSX3Cache(cCampo, "X3_VALID")
 	//Chama a validação do sistema
 	If ! Empty(cVldSis)
-		if cCampo == "C6_QTDVEN"
+		if cCampo == "C6_QTDVEN" // caso em releases futuros esse processo demore , recarregar os indices das tabelas  
 		//RegToMemory("SC6",.T.,.F.)
 			lRetVal := A410QTDGRA() 
 			if lRetVal
 				lRetVal := A410SegUm()
 			endif
 			if lRetVal
-				lRetVal := A410MultT()
+				lRetVal := A410MultT()// C6_DESCONT ou C6_VALDESC
 			endif
 			if lRetVal
 				lRetVal := a410Refr("C6_QTDVEN")
