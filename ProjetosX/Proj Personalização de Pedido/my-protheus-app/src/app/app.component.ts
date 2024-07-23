@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
 
   fetchPedidos(filter: { clienteDe: string, clienteAte: string, dataDe: string, dataAte: string }) {
     this.isLoading = true;
-    const url = `http://192.168.55.235:8970/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}`;
+    const url = `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}`;
     console.log(url);
     this.http.get<{ ConsultarPedidos: Pedido[] }>(url)
       .subscribe(

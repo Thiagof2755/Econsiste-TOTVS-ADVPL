@@ -36,11 +36,13 @@ WSRESTFUL REESTPED DESCRIPTION "API REST Protheus Pedidos em Aberto" FORMAT APPL
 
 END WSRESTFUL
 
+ng build
+
 WSMETHOD GET ConsultarPedidos HEADERPARAM clienteDe, clienteAte, dataDe, dataAte WSSERVICE REESTPED
 // Define "ValueRef" como um parâmetro de cabeçalho para o método GET "ConsultarPedidos"
 // Indica que este método é parte do serviço "REESTPED"
 
-//http://192.168.55.235:8970/rest/REESTPED/consultar/Pedidos?clienteDe=000000&clienteAte=zzzzzz&dataDe=2000-01-01&dataAte=2024-07-04
+//http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?clienteDe=000000&clienteAte=zzzzzz&dataDe=2000-01-01&dataAte=2024-07-04
 
 	Local oResponse		:=	Nil
 	Local cAliasCab		:=	"TMPCAB"
