@@ -7,7 +7,7 @@ User Function   MT097APR()
       RecLock('SC1', .F.)
                 SCR->CR_X_DTAPR := date()
                 SCR->CR_X_HRAPR := time()
-            SCR->(MsUnlock())
+            SCR->(MsUnlock()) //teste
   endif
 
   RestArea(aAreaSCR)
