@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { tap } from 'rxjs/operators';
 
 interface Produto {
   caixas: number;
@@ -70,19 +71,36 @@ export class AppComponent implements OnInit {
 
   fetchPedidos(filter: { clienteDe: string, clienteAte: string, dataDe: string, dataAte: string }) {
     this.isLoading = true;
-    const url = `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}`;
-    console.log(url);
-    this.http.get<{ ConsultarPedidos: Pedido[] }>(url)
-      .subscribe(
-        response => {
-          this.pedidos = response.ConsultarPedidos;
-          this.isLoading = false;
-        },
-        error => {
-          console.error('Error fetching pedidos:', error);
-          this.isLoading = false;
-        }
-      );
+
+    // Obtenha os dados da sessionStorage
+    const proBranch = sessionStorage.getItem("ProBranch");
+    
+    // Adicione a filial como um parâmetro de consulta
+    const filial = proBranch || ''; // Usa a filial 
+
+    //const url = `http://127.0.0.1:8080/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
+    const url = `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
+    
+    //https://tdn.totvs.com.br/display/public/framework/Contexto+de+Grupo+de+Empresas+e+Filial+em+aplicativos+PO-UI+embarcados+no+Protheus
+    //https://tdn.totvs.com.br/display/public/framework/Protheus-lib-core
+
+    console.log('URL:', url);
+
+    // Faça a requisição sem cabeçalhos adicionais
+    this.http.get<{ ConsultarPedidos: Pedido[] }>(url).pipe(
+      tap(response => {
+        console.log('Response:', response);
+      })
+    ).subscribe(
+      response => {
+        this.pedidos = response.ConsultarPedidos;
+        this.isLoading = false;
+      },
+      error => {
+        console.error('Error fetching pedidos:', error);
+        this.isLoading = false;
+      }
+    );
   }
 
   getTotalCaixas() {

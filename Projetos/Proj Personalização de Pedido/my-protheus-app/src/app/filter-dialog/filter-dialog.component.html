@@ -18,14 +18,17 @@
         </div>
         <div class="form-field">
             <label for="dataDe">Data De</label>
-            <input id="dataDe" formControlName="dataDe" type="date">
+            <input id="dataDe" formControlName="dataDe" placeholder="dd/mm/aaaa" appDateMask>
             <span *ngIf="filterForm.get('dataDe')!.hasError('required')">Este campo é obrigatório</span>
+            <span *ngIf="filterForm.get('dataDe')!.hasError('dateInvalid')">Formato de data inválido</span>
         </div>
         <div class="form-field">
             <label for="dataAte">Data Até</label>
-            <input id="dataAte" formControlName="dataAte" type="date">
+            <input id="dataAte" formControlName="dataAte" placeholder="dd/mm/aaaa" appDateMask>
             <span *ngIf="filterForm.get('dataAte')!.hasError('required')">Este campo é obrigatório</span>
+            <span *ngIf="filterForm.get('dataAte')!.hasError('dateInvalid')">Formato de data inválido</span>
         </div>
+
     </form>
     <div class="dialog-actions">
         <button (click)="applyFilter()" [disabled]="filterForm.invalid">Aplicar</button>

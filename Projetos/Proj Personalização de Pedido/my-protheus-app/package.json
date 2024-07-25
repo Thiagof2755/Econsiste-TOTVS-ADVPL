@@ -25,6 +25,7 @@
     "@totvs/protheus-lib-core": "^17.2.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "ngx-mask": "^18.0.0",
     "rxjs": "~7.8.0",
     "subsink": "^1.0.2",
     "tslib": "^2.3.0",

@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { DateMaskDirective } from './date-mask.directive';  // Importe a diretiva
 
 @Component({
   selector: 'app-filter-dialog',
@@ -11,7 +12,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule // Importando ReactiveFormsModule
+    ReactiveFormsModule,
+    DateMaskDirective  // Adicione a diretiva
   ]
 })
 export class FilterDialogComponent {
@@ -24,13 +26,22 @@ export class FilterDialogComponent {
     this.filterForm = this.fb.group({
       clienteDe: ['', [Validators.required, Validators.maxLength(6)]],
       clienteAte: ['', [Validators.required, Validators.maxLength(6)]],
-      dataDe: ['', Validators.required],
-      dataAte: ['', Validators.required]
+      dataDe: ['', [Validators.required, this.dateValidator]],
+      dataAte: ['', [Validators.required, this.dateValidator]]
     });
   }
 
+  private dateValidator(control: AbstractControl): ValidationErrors | null {
+    const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!control.value || datePattern.test(control.value)) {
+      return null;
+    }
+    return { dateInvalid: true };
+  }
+
   private formatDate(date: string): string {
-    return date.replace(/-/g, '');
+    const [day, month, year] = date.split('/');
+    return `${year}${month}${day}`;
   }
 
   applyFilter() {
@@ -51,8 +62,8 @@ export class FilterDialogComponent {
     this.dialogRef.close({
       clienteDe: '000000',
       clienteAte: 'zzzzzz',
-      dataDe: '20230101',
-      dataAte: this.formatDate(today.toISOString().split('T')[0])
+      dataDe: '20000101',
+      dataAte: this.formatDate(today.toISOString().split('T')[0].split('-').reverse().join('/'))
     });
   }
 }
