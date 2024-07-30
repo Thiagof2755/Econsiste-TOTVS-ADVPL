@@ -74,22 +74,23 @@ export class AppComponent implements OnInit {
 
     // Obtenha os dados da sessionStorage
     const proBranch = sessionStorage.getItem("ProBranch");
+    const token = sessionStorage.getItem("ERPTOKEN"); // Obtenha o token da sessionStorage
     
     // Adicione a filial como um parâmetro de consulta
     const filial = proBranch || ''; // Usa a filial 
 
-    //const url = `http://127.0.0.1:8080/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
-    const url = `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
+    const url = `http://192.168.55.235:8970/rest/REESTPED/consultar/Pedidos?clienteDe=${filter.clienteDe}&clienteAte=${filter.clienteAte}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
     
-    //https://tdn.totvs.com.br/display/public/framework/Contexto+de+Grupo+de+Empresas+e+Filial+em+aplicativos+PO-UI+embarcados+no+Protheus
-    //https://tdn.totvs.com.br/display/public/framework/Protheus-lib-core
+    // Adicione os cabeçalhos com o token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
 
-    console.log('URL:', url);
-
-    // Faça a requisição sem cabeçalhos adicionais
-    this.http.get<{ ConsultarPedidos: Pedido[] }>(url).pipe(
+    // Faça a requisição com os cabeçalhos adicionais
+    this.http.get<{ ConsultarPedidos: Pedido[] }>(url, { headers }).pipe(
       tap(response => {
         console.log('Response:', response);
+        console.log('Headers:', headers);
       })
     ).subscribe(
       response => {
@@ -98,11 +99,11 @@ export class AppComponent implements OnInit {
       },
       error => {
         console.error('Error fetching pedidos:', error);
+        console.log('Headers:', headers);
         this.isLoading = false;
       }
     );
   }
-
   getTotalCaixas() {
     const totais: { [key: string]: number } = {};
 

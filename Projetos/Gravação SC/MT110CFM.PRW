@@ -1,14 +1,15 @@
 /*/{Protheus.doc} MT110CFM
 User Function MT110CFM()Local ExpC1  := PARAMIXB[1]     Local ExpN1  := PARAMIXB[2]       // Validações do UsuárioReturn Nil
+GRAVAÇÃO APROVAÇÃO DE SOLICITAÇÃO COMPLETA
 /*/
 User Function MT110CFM()
 	Local aAreaSC1 := SC1->(GETAREA())
     Local cNunSC  := PARAMIXB[1]
     Local nOpcao  := PARAMIXB[2]
 
-    if nOpcao == 1
+    if nOpcao == 1 //Aprovação
         pergunte("MTA110",.F.)
-        lItem := mv_par02 == 1
+        lItem := mv_par02 == 1 
         
         if lItem
             RecLock('SC1', .F.)
