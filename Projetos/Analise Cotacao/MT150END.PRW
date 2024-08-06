@@ -11,18 +11,15 @@
 /*/
 User Function MT150END()
 Local nOp := PARAMIXB[1]
-LOCAL cCampo     := PadR("C8_X_FPGTO", 10)
-Local Compara 	 := X3CboxToArray(cCampo)
-Local NI         := NIL
 
     if nOp <> 5 // alterar
-
-        For NI := 1 To Len(Compara[1])
-            if Compara[2][NI] = ALLTRIM(cTIPO)
+        (cAliasTSC8)->(DbGoTop())
+        While !(cAliasTSC8)->(EOF())
+        dbseek((cAliasTSC8)->C8_FILIAL+(cAliasTSC8)->C8_NUM+(cAliasTSC8)->C8_FORNECE+(cAliasTSC8)->C8_LOJA+(cAliasTSC8)->C8_ITEM+(cAliasTSC8)->C8_NUMPRO+(cAliasTSC8)->C8_ITEMGRD)
                 RecLock('SC8', .F.)
-                    SC8->C8_X_FPGTO := Compara[2][NI]
+                    SC8->C8_X_FPGTO := cTIPO
                 SC8->(MsUnlock())
-            EndIF
-        Next
+				(cAliasTSC8)->(dbskip())
+			End *
     endif
 Return 

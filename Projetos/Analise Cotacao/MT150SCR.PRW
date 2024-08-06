@@ -18,20 +18,27 @@ User Function MT150SCR()
     Local aTIPO   	 := TkSX3Box(cCampo)
 	Local Compara 	 := X3CboxToArray(cCampo)
 	Local NI         := NIL
+	LOCAL cQuery 	 := FGetResult()
+	Public cAliasTSC8 := GetNextAlias()
     Public cTIPO     := " "
 
 
+//criar campo SC8 =  C8_X_FPGTO 
+//CARACTER  = 1 
+//FORMATO =  @!  
+//Opcoes =  1=Pix;2=Cartão;3=Boleto;4=Permuta;5=Transferência;6=Dinheiro       
+//Descricoes =  Forma de Pag                                                                                                       
 
 
     aSizeAut	:= MsAdvSize()
-	dbSelectArea("SC8")
-	dbSetOrder(1)
-	dbSeek(xFilial("SC8")+CA150NUM+CA150FORN+CA150LOJ+ALLTRIM(ACOLS[1][3]))
-	if !Empty(SC8->C8_X_FPGTO)
+	MpSysOpenQuery(cQuery, cAliasTSC8)
+	(cAliasTSC8)->(DbGoTop())
+
+	if !Empty((cAliasTSC8)->C8_X_FPGTO)
 		//cTIPO := ALLTRIM(SC8->C8_X_FPGTO)
 		For NI := 1 To Len(Compara[1])
-			if Compara[2][NI] = ALLTRIM(SC8->C8_X_FPGTO)
-				cTIPO := ALLTRIM(SC8->C8_X_FPGTO)
+			if Compara[2][NI] = ALLTRIM((cAliasTSC8)->C8_X_FPGTO)
+				cTIPO := ALLTRIM((cAliasTSC8)->C8_X_FPGTO)
 			EndIF
 		Next
 	Endif
@@ -67,9 +74,20 @@ User Function MT150SCR()
 						aAdd(aPosObj,{oSize:GetDimension('FOOT'  , 'LININI'),oSize:GetDimension('FOOT'  , 'COLINI'),oSize:GetDimension('FOOT'  , 'LINEND'),oSize:GetDimension('FOOT'  , 'COLEND')})
 
 
-    @ aPosObj[1][1]+17 ,aPosGet[1,7] SAY OemToAnsi("TIPO DE PAGAMENTO") Of oDlg PIXEL SIZE 60,8 
+    @ aPosObj[1][1]+17 ,aPosGet[1,7] SAY OemToAnsi("FORMA DE PAGAMENTO") Of oDlg PIXEL SIZE 80,8 
     @ aPosObj[1][1]+27 ,aPosGet[1,7] COMBOBOX cTIPO ITEMS aTIPO   OF oDlg PIXEL SIZE 60,8 
 
     RestArea(aArea)
 Return
+
+Static Function FGetResult()
+	Local cQuery := ""
+	cQuery  :=  "SELECT * FROM "+RetSqlName("SC8")+" "
+	cQuery += "WHERE D_E_L_E_T_ = '' "
+	cQuery += "AND C8_FILIAL = '"+xFilial("SC8")+"' "
+	cQuery += "AND C8_NUM = '"+CA150NUM+"' "
+	cQuery += "AND C8_FORNECE = '"+CA150FORN+"' "
+	cQuery += "AND C8_LOJA = '"+CA150LOJ+"' "
+
+Return cQuery
 
