@@ -25,9 +25,12 @@ User Function STFAT09()
 
 	Local aArea := GetArea()
 	Local oBrowse
+	Private aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV", "U5_DDD","U5_OBS","U5_REDSOC","U5_CODCONT","U5_SEXO"} // CAMPOS QUE VAO APARECER 
 	oBrowse:= FwmBrowse():New()
 	oBrowse:SetAlias("SA1")
 	oBrowse:SetDescription("Cadastro de Cientes")
+	cFiltro := u_MA030BRW()
+	oBrowse:AddFilter("Cliente x Representante", cFiltro, .T., .t., , , , )
 	oBrowse:Activate()
 	RestArea(aArea)
 
@@ -49,13 +52,15 @@ Static Function ModelDef()
 	oModel:GetModel("SU5CHILD"):SetDescription("Contatos")
 	oModel:GetModel("SU5TOPRF"):SetDescription("Contato")
 	oModel:GetModel("SU5CHILD"):SetOptional(.T.)
-	oModel:GetModel("SU5CHILD"):SetUniqueLine({"U5_CELULAR"})
+	//oModel:GetModel("SU5CHILD"):SetUniqueLine({"U5_CELULAR"})
 	oModel:GetModel("SU5CHILD"):SetUseOldGrid(.T.)
 
+	oStru:SetProperty("U5_CONTAT", MODEL_FIELD_OBRIGAT,.T.)
 	oStru:SetProperty('U5_CODCONT', MODEL_FIELD_OBRIGAT, .F.)
 	oStruMST:SetProperty('U5_CODCONT', MODEL_FIELD_OBRIGAT, .F.)
 	oStruMST:SetProperty("U5_CARGO", MODEL_FIELD_OBRIGAT,.F.)
 	oStruMST:SetProperty("U5_CONTAT", MODEL_FIELD_OBRIGAT,.F.)
+
 
 Return oModel
 
@@ -107,34 +112,88 @@ Static Function ViewDef()
 
 	oStruMST:SetProperty("U5_CODCONT", 	MVC_VIEW_CANCHANGE,.F.)
 	oStruMST:SetProperty("U5_CELULAR", 	MVC_VIEW_CANCHANGE,.T.)
-	oStruMST:SetProperty("U5_FONE",  	MVC_VIEW_CANCHANGE,.T.)
-	oStruMST:SetProperty("U5_CELULAR",  MVC_VIEW_ORDEM,"02")
-	oStruMST:SetProperty("U5_DDD",		MVC_VIEW_ORDEM,"01")
-	oStruMST:SetProperty("U5_FONE",		MVC_VIEW_ORDEM,"04")
-	oStruMST:SetProperty("U5_EMAIL",		MVC_VIEW_ORDEM,"05")
-	oStruMST:SetProperty("U5_NIVER",		MVC_VIEW_ORDEM,"06")
-	oStruMST:SetProperty("U5_HOBBIE",		MVC_VIEW_ORDEM,"07")
-	oStruMST:SetProperty("U5_CARGO",		MVC_VIEW_ORDEM,"08")
-	oStruMST:SetProperty("U5_OBS",		MVC_VIEW_ORDEM,"11")
-	oStru:SetProperty("U5_DDD", 		MVC_VIEW_CANCHANGE,.T.)
 	oStruMST:SetProperty("U5_DDD",  	MVC_VIEW_CANCHANGE,.T.)
-	oStru:SetProperty("U5_CODCONT", MVC_VIEW_CANCHANGE,.F.)
-	oStru:SetProperty("U5_CELULAR", MVC_VIEW_CANCHANGE,.T.)
-	oStru:SetProperty("U5_FONE",  	MVC_VIEW_CANCHANGE,.T.)
-	oStru:SetProperty("U5_CELULAR", MVC_VIEW_ORDEM,"02")
-	oStru:SetProperty("U5_DDD",  	MVC_VIEW_ORDEM,"01")
-	oStru:SetProperty("U5_CONTAT", 	MVC_VIEW_ORDEM,"03")
-	oStru:SetProperty("U5_CODCONT", MVC_VIEW_ORDEM,"11")
-	oStru:SetProperty("U5_CARGO", 	MVC_VIEW_ORDEM,"04")
+	oStru:SetProperty("U5_DDD", 		MVC_VIEW_CANCHANGE,.T.)
+	oStru:SetProperty("U5_CODCONT",		MVC_VIEW_CANCHANGE,.F.)
+	oStru:SetProperty("U5_CELULAR", 	MVC_VIEW_CANCHANGE,.T.)
+
+
 	oStruMST:removeField("U5_CODCONT")
-	
+
+
+	// NOVO NOME DOS CAMPOS CABEÇALHO
+
+		oStruMST:SetProperty("U5_CARGO", MVC_VIEW_TITULO, "Cargo")
+		oStruMST:SetProperty("U5_CONTAT", MVC_VIEW_TITULO, "Nome")
+		oStruMST:SetProperty("U5_CELULAR", MVC_VIEW_TITULO, "Celular")
+		oStruMST:SetProperty("U5_EMAIL", MVC_VIEW_TITULO, "Email")
+		oStruMST:SetProperty("U5_NIVER", MVC_VIEW_TITULO, "Data aniversário")
+		oStruMST:SetProperty("U5_HOBBIE", MVC_VIEW_TITULO, "Hobbie")
+		oStruMST:SetProperty("U5_ESPF", MVC_VIEW_TITULO, "Esporte Favorito")
+		oStruMST:SetProperty("U5_TIMFAV", MVC_VIEW_TITULO, "Time Favorito")
+		oStruMST:SetProperty("U5_DDD", MVC_VIEW_TITULO, "DDD")
+		oStruMST:SetProperty("U5_OBS", MVC_VIEW_TITULO, "Observações")
+
+	// NOVO NOME DOS CAMPOS GRID
+		oStru:SetProperty("U5_CODCONT", MVC_VIEW_TITULO, "Cod Contato")
+		oStru:SetProperty("U5_CARGO", MVC_VIEW_TITULO, "Cargo")
+		oStru:SetProperty("U5_CONTAT", MVC_VIEW_TITULO, "Nome")
+		oStru:SetProperty("U5_CELULAR", MVC_VIEW_TITULO, "Celular")
+		oStru:SetProperty("U5_EMAIL", MVC_VIEW_TITULO, "Email")
+		oStru:SetProperty("U5_NIVER", MVC_VIEW_TITULO, "Data aniversário")
+		oStru:SetProperty("U5_HOBBIE", MVC_VIEW_TITULO, "Hobbie")
+		oStru:SetProperty("U5_ESPF", MVC_VIEW_TITULO, "Esporte Favorito")
+		oStru:SetProperty("U5_TIMFAV", MVC_VIEW_TITULO, "Time Favorito")
+		oStru:SetProperty("U5_DDD", MVC_VIEW_TITULO, "DDD")
+		oStru:SetProperty("U5_OBS", MVC_VIEW_TITULO, "Observações")
+
+	// ORDEM CAMPOS DO CABEÇALHO
+		oStruMST:SetProperty("U5_DDD", MVC_VIEW_ORDEM, "01")
+		oStruMST:SetProperty("U5_CELULAR", MVC_VIEW_ORDEM, "02")
+		oStruMST:SetProperty("U5_CARGO", MVC_VIEW_ORDEM, "03")
+		oStruMST:SetProperty("U5_CONTAT", MVC_VIEW_ORDEM, "04")
+		oStruMST:SetProperty("U5_SEXO", MVC_VIEW_ORDEM, "05")
+		oStruMST:SetProperty("U5_EMAIL", MVC_VIEW_ORDEM, "06")
+		oStruMST:SetProperty("U5_REDSOC", MVC_VIEW_ORDEM, "07")   
+		oStruMST:SetProperty("U5_NIVER", MVC_VIEW_ORDEM, "08")
+		oStruMST:SetProperty("U5_HOBBIE", MVC_VIEW_ORDEM, "09")
+		oStruMST:SetProperty("U5_ESPF", MVC_VIEW_ORDEM, "10")
+		oStruMST:SetProperty("U5_TIMFAV", MVC_VIEW_ORDEM, "11")
+		oStruMST:SetProperty("U5_OBS", MVC_VIEW_ORDEM, "12")
+
+	// ORDEM CAMPOS DO GRID
+		oStru:SetProperty("U5_DDD", MVC_VIEW_ORDEM, "01")
+		oStru:SetProperty("U5_CELULAR", MVC_VIEW_ORDEM, "02")
+		oStru:SetProperty("U5_CARGO", MVC_VIEW_ORDEM, "03")
+		oStru:SetProperty("U5_CONTAT", MVC_VIEW_ORDEM, "04")
+		oStru:SetProperty("U5_SEXO", MVC_VIEW_ORDEM, "05")
+		oStru:SetProperty("U5_EMAIL", MVC_VIEW_ORDEM, "06")
+		oStru:SetProperty("U5_REDSOC", MVC_VIEW_ORDEM, "07")   
+		oStru:SetProperty("U5_NIVER", MVC_VIEW_ORDEM, "08")
+		oStru:SetProperty("U5_HOBBIE", MVC_VIEW_ORDEM, "09")
+		oStru:SetProperty("U5_ESPF", MVC_VIEW_ORDEM, "10")
+		oStru:SetProperty("U5_TIMFAV", MVC_VIEW_ORDEM, "11")
+		oStru:SetProperty("U5_OBS", MVC_VIEW_ORDEM, "12")
+
+	// PICTURE DO CAMPO
+		oStruMST:SetProperty("U5_REDSOC", MVC_VIEW_PICT, "@!")
+		oStruMST:SetProperty("U5_HOBBIE", MVC_VIEW_PICT, "@!")
+		oStruMST:SetProperty("U5_ESPF", MVC_VIEW_PICT, "@!")
+		oStruMST:SetProperty("U5_OBS", MVC_VIEW_PICT, "@!")
+		oStruMST:SetProperty("U5_TIMFAV", MVC_VIEW_PICT, "@!")
+		oStru:SetProperty("U5_REDSOC", MVC_VIEW_PICT, "@!")
+		oStru:SetProperty("U5_HOBBIE", MVC_VIEW_PICT, "@!")
+		oStru:SetProperty("U5_ESPF", MVC_VIEW_PICT, "@!")
+		oStru:SetProperty("U5_OBS", MVC_VIEW_PICT, "@!")
+		oStru:SetProperty("U5_TIMFAV", MVC_VIEW_PICT, "@!")
+
 
 
 
 Return oView
 
 
-Static Function MenuDef()
+Static Function MenuDef() 
 	local aRotina     := FWMVCMenu("STFAT09")
 
 Return aRotina
@@ -234,13 +293,13 @@ Static Function AC8Relation()
 	Local oModelGrid 	:= oModel:GetModel('SU5CHILD')
 	Local oModelSA1     := oModel:GetModel('SA1MASTER')
 	Local nI := 0
-	local Cargo
-	local Gerente
-	local Comprador
+	//local Cargo
+	//local Gerente
+	//local Comprador
 
 	dbselectarea("SA1")
 
-	for nI:= 1 to oModelGrid:Length()
+	/*for nI:= 1 to oModelGrid:Length()
 		oModelGrid:GoLine(nI)
 		Cargo := oModelGrid:GetValue("U5_CARGO")
 
@@ -251,9 +310,9 @@ Static Function AC8Relation()
 		If Cargo == "01"
 			Gerente := 1
 		endif
-	Next
+	Next*/
 
-	If Gerente == 1 .AND. Comprador == 1
+	//If Gerente == 1 .AND. Comprador == 1
 		for nI:= 1 to oModelGrid:Length()
 			oModelGrid:GoLine(nI)
 			AC8->(dbsetorder(1))
@@ -280,10 +339,10 @@ Static Function AC8Relation()
 			endif
 		next
 
-	else
+	/*else
 		MsgStop( "Necessario selecionar pelo menos um cargo de Gerente e Comprador")
 		Return .F.
-	endif
+	endif*/
 Return .T.
 
 
@@ -298,8 +357,12 @@ Static Function SU5Register()
 	for nI:= 1 to oModelGrid:Length()
 		oModelGrid:GoLine(nI)
 		SU5->(dbsetorder(1))
-		if !SU5->(dbseek(xFilial("SU5")+oModelGrid:GetValue("U5_CODCONT")))//U5_FILIAL+U5_CODCONT
+
 		/* Cria o registro com base nas informações do grid */
+
+
+		if !SU5->(dbseek(xFilial("SU5")+oModelGrid:GetValue("U5_CODCONT")))//U5_FILIAL+U5_CODCONT
+		
 			Identificador := NEWNUMCONT()
 			Reclock("SU5",.T.)
 			SU5->U5_FILIAL := xFilial("SU5")
@@ -311,6 +374,8 @@ Static Function SU5Register()
 				DO CASE
 					CASE cCampo == "U5_CODCONT"
 						SU5->U5_CODCONT := Identificador
+					CASE  cCampo == "U5_FILIAL"
+						SU5->U5_FILIAL := (xFilial("SU5"))
 					OTHERWISE
 						SU5->&(cCampo) := oModelGrid:GetValue(cCampo)
 				ENDCASE
@@ -320,27 +385,56 @@ Static Function SU5Register()
 			SU5->(MSuNLOCK())
 
 			oModel:SetValue("SU5CHILD","U5_CODCONT",Identificador)
-		/* -----------------------------------------------------*/
+
+
 		Endif
-		/* Atualiza o registro com base nas informações do grid */
-		Reclock("SU5",.F.)
 
-		For x := 1 To Len(oModelGrid:aHeader)
+		/* ------------------ OUTRO CONTATO -----------------------*/
 
-			cCampo := ALLTRIM(oModelGrid:aHeader[x][2])
+			if SU5->(dbseek(xFilial("SU5")+oModelGrid:GetValue("U5_CODCONT"))) .AND. SU5->U5_CARGO <> oModelGrid:GetValue("U5_CARGO")
 
-			If cCampo == "U5_FILIAL"
+			Identificador := NEWNUMCONT()
+			Reclock("SU5",.T.)
+
+			For x := 1 To Len(oModelGrid:aHeader)
+
+					cCampo := ALLTRIM(oModelGrid:aHeader[x][2])
+
+					IF cCampo == "U5_CODCONT"
+						SU5->U5_CODCONT := Identificador
+						oModel:SetValue("SU5CHILD","U5_CODCONT",Identificador)
+					else
+						SU5->&(cCampo) := oModelGrid:GetValue(cCampo)
+					EndIf
+				Next
+						
 				SU5->U5_FILIAL := (xFilial("SU5"))
-			else
-				SU5->&(cCampo) := oModelGrid:GetValue(cCampo)
-			EndIf
-		Next
+						
+				SU5->(MSuNLOCK())
 
-		SU5->(MSuNLOCK())
-		/* -----------------------------------------------------*/
+			endif
+
+			/* Atualiza o registro com base nas informações do grid */
+
+			if SU5->(dbseek(xFilial("SU5")+oModelGrid:GetValue("U5_CODCONT"))) .AND. SU5->U5_CARGO == oModelGrid:GetValue("U5_CARGO")
+
+				Reclock("SU5",.F.)
+
+				For x := 1 To Len(oModelGrid:aHeader)
+
+					cCampo := ALLTRIM(oModelGrid:aHeader[x][2]) 
+
+					If cCampo == "U5_FILIAL"
+						SU5->U5_FILIAL := (xFilial("SU5"))
+					else
+						SU5->&(cCampo) := oModelGrid:GetValue(cCampo)
+					EndIf
+				Next
+
+				SU5->(MSuNLOCK())
+			ENDIF
 
 	Next
-
 
 
 Return .T.
@@ -406,7 +500,6 @@ Static Function GetView()
 	Local oStru := FWFormViewStruct():New()
 	Local oStructSU5 := FWFormStruct(2, "SU5")
 	Local nI
-	Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV","U5_CODCONT","U5_DDD","U5_OBS"}
 
 	// Adiciona um campo à estrutura
 	For nI := 1 To Len(oStructSU5:AFIELDS)
@@ -416,8 +509,16 @@ Static Function GetView()
 		If !Virtual //== .F.
 			If AScan(aCamposPermitidos, nCampo) > 0
 				cLista := oStructSU5:AFIELDS[nI][13]
-				If nCampo == "U5_CARGO"
-					cLista := {"00=","01=Gerente de Pós Vendas", "02=Gerente de Serviço", "03=Gerente de peças", "04=Chefe de Oficina", "05=Comprador", "06=Consultor", "07=Vendedor", "08=Diretor", "09=Titular"}
+				If nCampo == "U5_CARGO"             // OÇOES DO COMBOX
+				cLista := {"01=Titular",;
+						   "02=Diretor", ;
+						   "03=G. Pós vendas",;
+						   "04=G. Serviço",;
+						   "05=G. Peças",;
+						   "06=Chefe de Oficina",;
+						   "07=Comprador",;
+						   "08=Consultores",;
+						   "09=Técnico"}
 				EndIf
 
 				oStru:AddField( oStructSU5:AFIELDS[nI][1],;      // [01]  C   Nome do Campo
@@ -434,7 +535,7 @@ Static Function GetView()
 								Nil,;                            // [12]  C   Agrupamento do campo
 								cLista,;                         // [13]  A   Lista de valores permitido do campo (Combo)
 								Nil,;                            // [14]  N   Tamanho maximo da maior opção do combo
-								Nil,;                            // [15]  C   Inicializador de Browse
+								"01=Titular",;                            // [15]  C   Inicializador de Browse
 								Nil,;                            // [16]  L   Indica se o campo é virtual
 								oStructSU5:AFIELDS[nI][17],;     // [17]  C   Picture Variavel
 								Nil)                             // [18]  L   Indica pulo de linha após o campo
@@ -447,7 +548,7 @@ Return oStru
 
 
 
-User Function GAT()
+User Function GAT() // GATILHO 
     Local aArea := GetArea()
     Local cNome := " "
     Local cAlias := GetNextAlias()
@@ -510,12 +611,11 @@ Static Function tBtn(oPanel)
 Return
 
 
-Static Function AddGridd()
+Static Function AddGridd() // ADICIONA O CONTEUDO DE CIMA PARA BAIXO 
 	Local oModel          := FWModelActive()
 	Local oView 		  := FwViewActive()
 	Local oModelGrid      := oModel:GetModel('SU5CHILD')
 	Local oModelFields    := oModel:GetModel('SU5TOPRF')
-	Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV", "U5_CODCONT","U5_DDD","U5_OBS"}
 	Local nI
 	Local Conteudo
 	Local nLinha
@@ -527,7 +627,18 @@ Static Function AddGridd()
 		return
 	endif
 	if Empty(ALLTRIM(oModelFields:GetValue("U5_CARGO")))
-		MsgStop("Necessário informar o cargo do contato")
+        oModelFields:SetValue("U5_CARGO", "01")
+	endif
+	if IsNumeric(oModelFields:GetValue("U5_CELULAR")) == .F.
+		MsgStop("Celular não é numerico")
+		return
+	endif
+	if len(alltrim(oModelFields:GetValue("U5_CELULAR"))) < 9	
+			MsgStop("Tamanho do Celular Invalido")
+		return
+	endif
+	if Empty(ALLTRIM(oModelFields:GetValue("U5_NIVER")))
+		MsgStop("Necessário informar Data")
 		return
 	endif
 
@@ -537,13 +648,15 @@ Static Function AddGridd()
 	if !Empty(ALLTRIM(oModelGrid:GetValue("U5_CONTAT")))
 		oModelGrid:AddLine()
 	EndIf
+
+
 	nLinha := oModelGrid:Length()
 	oModelGrid:GoLine(nLinha)
 
 	FOR nI := 1 TO Len(aCamposPermitidos)	
 		Conteudo := oModelFields:GetValue(aCamposPermitidos[nI])
 		if aCamposPermitidos[nI] == "U5_NIVER"
-
+ 
 			rDT := STOD(rDT)
 			oModelGrid:SetValue(aCamposPermitidos[nI], Conteudo)
 			oModelFields:SetValue(aCamposPermitidos[nI],rDT )
@@ -552,14 +665,14 @@ Static Function AddGridd()
 		oModelFields:LoadValue(aCamposPermitidos[nI], "")
 		ENDIF
 	Next
-
+	oModelGrid:GoLine(1)
 	oView:Refresh()
 
 Return
 
 
 
-User Function GATFIELD()
+User Function GATFIELD() //GATILHO 
     Local cNome := " "
     Local cAlias := GetNextAlias()
     Local oModel := FWModelActive()
@@ -569,8 +682,7 @@ User Function GATFIELD()
     local nI := 0
     Local cQuery := ""
     local cValor
-    Local aCamposPermitidos := {"U5_CARGO", "U5_CONTAT", "U5_CELULAR", "U5_FONE", "U5_EMAIL", "U5_NIVER", "U5_HOBBIE", "U5_ESPF", "U5_TIMFAV", "U5_CODCONT", "U5_DDD","U5_OBS"}
-
+  
     cQuery += 'SELECT * FROM ' + RetSqlName("SU5") + ''
     cQuery += " WHERE U5_CELULAR = '" + cCelular + "'"
     cQuery += " AND U5_DDD = '" + cDDD + "'" 

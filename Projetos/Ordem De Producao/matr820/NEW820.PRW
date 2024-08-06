@@ -261,8 +261,43 @@ Local nLinBar	:= 0
 Local cWhere01, cWhere02, cWhere03
 Local cOrderBy
 Local lVer116   := (VAL(GetVersao(.F.)) == 11 .And. GetRpoRelease() >= "R6" .Or. VAL(GetVersao(.F.))  > 11)
+Local cQuery
+Local cAlias := 'TBLTEM'
+Local aDadosP    := {}
+Local cREIMP        := ""
+Local NI
+Local dDtAtual := Date()
 Private aArray	 := {}
 Private lItemNeg := GetMv("MV_NEGESTR") .And. mv_par11 == 1
+
+
+
+
+/////////MSG DE ULTIMAS IMPRESSOES////////////////
+pergunte("MTR820",.F.)
+
+cQuery = GetOP(MV_PAR01,MV_PAR02,MV_PAR03,MV_PAR04,MV_PAR08,MV_PAR10)
+MpSysOpenQuery(cQuery,cAlias)
+
+	While (cAlias)->(!EOF())
+		dbselectarea("SC2")
+		SC2->(MsSeek(FWxFilial("SC2") + (cAlias)->(C2_NUM)+(cAlias)->(C2_ITEM)+(cAlias)->(C2_SEQUEN)+(cAlias)->(C2_ITEMGRD))) // C2_FILIAL+C2_NUM+C2_ITEM+C2_SEQUEN+C2_ITEMGRD
+		
+        IF !Empty(SC2->C2_XUSR)
+			aadd(aDadosP,{Alltrim(SC2->C2_NUM)+Alltrim(SC2->C2_ITEM)+Alltrim(SC2->C2_SEQUEN),SC2->C2_XNUMIP,SC2->C2_XUSR})
+        ENDIF
+		(cAlias)->(dbskip())
+	End *
+
+	IF !Empty(aDadosP)
+		For NI := 1 TO Len(aDadosP)
+		 	cREIMP += "OP :    " + aDadosP[NI][1] + " Ja Impressa "+cValToChar(aDadosP[NI][2])+" vezes  por: " + aDadosP[NI][3] + " " + CRLF
+			cREIMP += " "+ CRLF
+		Next
+		MSGINFO(cREIMP)																																					
+	EndIF
+
+
 
 
 // Definindo quebra para secao 2 e ocultando celula utilizada somente para quebra
@@ -395,10 +430,15 @@ While !oReport:Cancel() .And. !(cAliasTop)->(Eof())
         IF Empty(SC2->C2_XNUMIP)
             SC2->C2_XNUMIP := 1
             SC2->C2_XUSR := UsrRetName(RetCodUsr())
+			SC2->C2_XDATE:= (DTOC(dDtAtual))
+			SC2->C2_XTIME:= time()
         ELSE 
             SC2->C2_XNUMIP := (SC2->C2_XNUMIP) + 1
-            SC2->C2_XUSR := (SC2->C2_XUSR) + " /" + UsrRetName(RetCodUsr())
+            SC2->C2_XUSR := (SC2->C2_XUSR) + " / " + UsrRetName(RetCodUsr())
+			SC2->C2_XDATE:= (SC2->C2_XDATE) + " / " + (DTOC(dDtAtual))
+			SC2->C2_XTIME:= (SC2->C2_XTIME) + " / " + time()
         ENDIF
+
 	SC2->(MSuNLOCK())
 
 	//旼컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴�
@@ -553,6 +593,11 @@ Return Nil
 Static Function MR820Desc(oReport, cAliasTop)
 Local oSection1 := oReport:Section(1)
 Local lSB1Desc 	:= .T.
+
+
+
+
+
  
 If mv_par07 == 1
 	SB5->(dbSetOrder(1))
@@ -1677,3 +1722,32 @@ PutSx1("MTR820","12","Imprime Lote/S.Lote ?","풦mprime Lote/Subl. ?","Print Lot/
 aHelpPor,aHelpEng,aHelpSpa) 
 
 Return
+
+
+Static function GetOP(OPde,OPate,DataDe,DataAte,Encerrada,Tipo)
+Local cQuery := ""
+
+//converte data para PADROES SQL
+DataDe := DTOS(DataDe)
+DataAte := DTOS(DataAte)
+
+
+cQuery += "SELECT C2_NUM,C2_ITEM,C2_SEQUEN,C2_ITEMGRD FROM  " + RetSqlName("SC2") + " "
+cQuery += "WHERE C2_NUM+C2_ITEM+C2_SEQUEN  BETWEEN  '" +OPde + "' AND '" + OPate + "' "
+cQuery += "AND C2_DATPRF BETWEEN '" + DataDe + "' AND '" + DataAte + "' "
+
+    IF Encerrada == 2
+    cQuery += "AND C2_DATPRF = ' ' "
+    ENDIF
+    IF Tipo <> 3
+        IF Tipo == 1
+        cQuery += "AND C2_TPOP = 'F' "
+        ENDIF
+        IF Tipo == 2
+        cQuery += "AND C2_TPOP = 'P' "
+        ENDIF
+    ENDIF
+
+cQuery +=  "AND C2_FILIAL = '"+xFilial("SC2")+"' "
+cQuery += "AND D_E_L_E_T_ = ' ' "
+Return  cQuery
