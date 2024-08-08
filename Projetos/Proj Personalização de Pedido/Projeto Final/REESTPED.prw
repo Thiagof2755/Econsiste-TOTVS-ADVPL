@@ -57,6 +57,7 @@ WSMETHOD GET ConsultarPedidos HEADERPARAM vendedorDe, vendedorate, dataDe, dataA
 	Local cQueryProd    := ''
 	Local oPedido       := nil
 	Local oProduto      := nil
+	Local Desconto      := 0.00
 
 
 	oJson:FromJson(filial)
@@ -82,16 +83,21 @@ WSMETHOD GET ConsultarPedidos HEADERPARAM vendedorDe, vendedorate, dataDe, dataA
 		While !(cAliasCab)->(EOF())
 			oPedido := JsonObject():New()
 			oPedido["numero"] := ALLTRIM((cAliasCab)->C5_NUM)
+			oPedido["vendedor"] := ALLTRIM((cAliasCab)->A3_NOME)
+			oPedido["codVendedor"] := ALLTRIM((cAliasCab)->A3_COD)
 			oPedido["cliente"] := ALLTRIM((cAliasCab)->A1_NOME)
 			oPedido["cnpj"] := (cAliasCab)->A1_CGC
 			oPedido["endereco"] := ALLTRIM((cAliasCab)->A1_ENDREC)
 			oPedido["cidade"] := (ALLTRIM((cAliasCab)->A1_ESTADO) + ' - ' + ALLTRIM((cAliasCab)->A1_MUN))
 			oPedido["email"] := ALLTRIM((cAliasCab)->A1_EMAIL)
-			oPedido["prazoEntrega"] := ALLTRIM((cAliasCab)->C6_ENTREG)
+			oPedido["prazoEntrega"] := STOD(DTOS(ALLTRIM((cAliasCab)->C6_ENTREG)))
 			oPedido["obs"] := (ALLTRIM((cAliasCab)->C5_OBS)) 
 			oPedido["prazoPagamento"] := ALLTRIM((cAliasCab)->prazoPagamento)
 			oPedido["produtos"] := {}
 			oPedido["totalPedido"] := ((cAliasCab)->VALOR_TOTAL_POR_PEDIDO)
+			Desconto :=((cAliasCab)->percentual_desconto * (cAliasCab)->VALOR_TOTAL_POR_PEDIDO) - ((cAliasCab)->VALOR_TOTAL_POR_PEDIDO)
+			oPedido["totalDesconto"] := Desconto
+
 
 			cQueryProd := FGetQueryProd(ALLTRIM((cAliasCab)->C5_NUM))
 			MpSysOpenQuery(cQueryProd, cAliasProd)
@@ -171,8 +177,11 @@ Static Function FGetQueryCabecalho( vendedorDe, vendedorate, dataDe, dataAte , f
 	cQuery += "    SA1.A1_MUN, "
 	cQuery += "    SA1.A1_ESTADO, "
 	cQuery += "    SC5.C5_EMISSAO, "
-	cQuery += "    SC5.C5_OBS, "
+	cQuery += "    SC5.C5_MENNOTA AS C5_OBS, "
 	cQuery += "    SE4.E4_DESCRI AS prazoPagamento, "
+	cQuery += "    (SC5.C5_DESCFI*0.01) AS percentual_desconto, "
+	cQuery += "    SA3.A3_NOME, "
+	cQuery += "    SA3.A3_COD, "
 	cQuery += "    MAX(SC6.C6_ENTREG) AS C6_ENTREG, "
 	cQuery += "    SUM(SC6.C6_PRCVEN * (SC6.C6_QTDVEN - SC6.C6_QTDENT)) AS VALOR_TOTAL_POR_PEDIDO "
 	cQuery += "FROM "
@@ -215,10 +224,13 @@ Static Function FGetQueryCabecalho( vendedorDe, vendedorate, dataDe, dataAte , f
 	cQuery += "    SA1.A1_ENDREC, "
 	cQuery += "    SA1.A1_EMAIL, "
 	cQuery += "    SC5.C5_EMISSAO, "
-	cQuery += "    SC5.C5_OBS, "
+	cQuery += "    SC5.C5_MENNOTA, "
 	cQuery += "    SE4.E4_DESCRI, "
 	cQuery += "    SA1.A1_MUN, "
+	cQuery += "    SA3.A3_NOME, "
+	cQuery += "    SC5.C5_DESCFI, "
 	cQuery += "    SA1.A1_ESTADO, "
+	cQuery += "    SA3.A3_COD, "
 	cQuery += "    SC5.C5_USERLGI,"
 	cQuery += "    SC5.C5_USERLGA "
 	cQuery += "	) A "

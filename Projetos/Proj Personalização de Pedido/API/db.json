@@ -1,0 +1,173 @@
+{
+    "ConsultarPedidos": [
+        {
+            "numero": "12345",
+            "codVendedor": "000130",
+            "vendedor": "Jemerson Silva",
+            "cliente": "Cliente A",
+            "cnpj": "12.345.678/0001-99",
+            "endereco": "Rua Exemplo, 123",
+            "cidade": "Cidade Exemplo",
+            "email": "clienteA@example.com",
+            "prazoEntrega": "01/01/2024",
+            "produtos": [
+                {
+                    "caixas": 10,
+                    "descricao": "Produto A",
+                    "precoUnitario": 10.5,
+                    "precoCaixa": 105,
+                    "total": 1050
+                },
+                {
+                    "caixas": 5,
+                    "descricao": "Produto B",
+                    "precoUnitario": 20,
+                    "precoCaixa": 100,
+                    "total": 500
+                }
+            ],
+            "totalPedido": 1550,
+            "totalDesconto": 1550,
+            "prazoPagamento": "30 dias",
+            "obs": "Nenhuma observação"
+        },
+        {
+            "numero": "67890",
+            "codVendedor": "000130",
+            "vendedor": "Jemerson Silva",
+            "cliente": "Cliente B",
+            "cnpj": "98.765.432/0001-88",
+            "endereco": "Avenida Principal, 456",
+            "cidade": "Outra Cidade",
+            "email": "clienteB@example.com",
+            "prazoEntrega": "01/01/2024",
+            "produtos": [
+                {
+                    "caixas": 20,
+                    "descricao": "Produto C",
+                    "precoUnitario": 15,
+                    "precoCaixa": 300,
+                    "total": 6000
+                },
+                {
+                    "caixas": 10,
+                    "descricao": "Produto D",
+                    "precoUnitario": 25,
+                    "precoCaixa": 250,
+                    "total": 2500
+                }
+            ],
+            "totalPedido": 8500,
+            "totalDesconto": 1550,
+            "prazoPagamento": "15 dias",
+            "obs": "Entrega urgente"
+        },
+        {
+            "numero": "11121",
+            "codVendedor": "000130",
+            "vendedor": "Jemerson Silva",
+            "cliente": "Cliente C",
+            "cnpj": "55.444.333/0001-22",
+            "endereco": "Travessa Secundária, 789",
+            "cidade": "Cidade Pequena",
+            "email": "clienteC@example.com",
+            "prazoEntrega": "01/01/2024",
+            "produtos": [
+                {
+                    "caixas": 7,
+                    "descricao": "Produto E",
+                    "precoUnitario": 12.5,
+                    "precoCaixa": 87.5,
+                    "total": 612.5
+                },
+                {
+                    "caixas": 3,
+                    "descricao": "Produto F",
+                    "precoUnitario": 30,
+                    "precoCaixa": 90,
+                    "total": 270
+                },
+                {
+                    "caixas": 12,
+                    "descricao": "Produto G",
+                    "precoUnitario": 9.75,
+                    "precoCaixa": 117,
+                    "total": 1404
+                }
+            ],
+            "totalPedido": 2286.5,
+            "totalDesconto": 1550,
+            "prazoPagamento": "45 dias",
+            "obs": "Cliente preferencial"
+        },
+        {
+            "numero": "22232",
+            "codVendedor": "000130",
+            "vendedor": "Jemerson Silva",
+            "cliente": "Cliente D",
+            "cnpj": "99.888.777/0001-11",
+            "endereco": "Estrada Rural, S/N",
+            "cidade": "Cidade Rural",
+            "email": "clienteD@example.com",
+            "prazoEntrega": "01/01/2024",
+            "produtos": [
+                {
+                    "caixas": 50,
+                    "descricao": "Produto H",
+                    "precoUnitario": 8,
+                    "precoCaixa": 400,
+                    "total": 20000
+                },
+                {
+                    "caixas": 20,
+                    "descricao": "Produto I",
+                    "precoUnitario": 14,
+                    "precoCaixa": 280,
+                    "total": 5600
+                }
+            ],
+            "totalPedido": 25600,
+            "totalDesconto": 1550,
+            "prazoPagamento": "60 dias",
+            "obs": "Pagamento à vista"
+        },
+        {
+            "numero": "33343",
+            "codVendedor": "000130",
+            "vendedor": "Jemerson Silva",
+            "cliente": "Cliente E",
+            "cnpj": "11.222.333/0001-44",
+            "endereco": "Praça Central, 101",
+            "cidade": "Cidade Média",
+            "email": "clienteE@example.com",
+            "prazoEntrega": "01/01/2024",
+            "produtos": [
+                {
+                    "caixas": 8,
+                    "descricao": "Produto J",
+                    "precoUnitario": 50,
+                    "precoCaixa": 400,
+                    "total": 3200
+                },
+                {
+                    "caixas": 15,
+                    "descricao": "Produto K",
+                    "precoUnitario": 30,
+                    "precoCaixa": 450,
+                    "total": 6750
+                },
+                {
+                    "caixas": 10,
+                    "descricao": "Produto L",
+                    "precoUnitario": 40,
+                    "precoCaixa": 400,
+                    "total": 4000
+                }
+            ],
+            "totalPedido": 13950,
+            "totalDesconto": 1550,
+            "prazoPagamento": "90 dias",
+            "obs": "Entrega parcelada"
+        }
+    ]
+}

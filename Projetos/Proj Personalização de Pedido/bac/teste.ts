@@ -20,6 +20,7 @@ interface Produto {
 
 interface DecodedToken {
   userid: string;
+  // Adicione outros campos que você espera no token, se necessário
 }
 
 interface Pedido {
@@ -38,8 +39,6 @@ interface Pedido {
   obs: string;
   totalDesconto: number;
 }
-
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -147,7 +146,7 @@ base64UrlDecode(base64Url: string): string {
 
 
     //const url = `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
-    const url =  `http://192.168.55.235:8970/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
+      const url =  `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
    // const url = `http://127.0.0.1:8080/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
 
     // Adicione os cabeçalhos com o token
@@ -155,7 +154,6 @@ base64UrlDecode(base64Url: string): string {
       'Authorization': `Bearer ${accessToken}`
     });
     console.log('Token:', accessToken);
-    console.log('URL:', url);
 
     // Faça a requisição com os cabeçalhos
     this.http.get<{ ConsultarPedidos: Pedido[] }>(url, { headers }).pipe(
@@ -192,7 +190,6 @@ base64UrlDecode(base64Url: string): string {
     }));
   }
 
-
   async exportToExcel() {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Pedidos');
@@ -226,7 +223,7 @@ base64UrlDecode(base64Url: string): string {
     this.pedidos.forEach(pedido => {
       const currentRow = worksheet.rowCount + 1;
 
-      worksheet.getCell(`A${currentRow}`).value = `Numero: ${pedido.numero}          Vendedor: ${pedido.codVendedor}   -   ${pedido.vendedor}`;
+      worksheet.getCell(`A${currentRow}`).value = `Numero: ${pedido.numero}`;
       worksheet.getCell(`A${currentRow}`).font = { bold: true, color: { argb: 'FFFFFFFF' } };
       worksheet.getCell(`A${currentRow}`).fill = {
         type: 'pattern',
@@ -246,8 +243,15 @@ base64UrlDecode(base64Url: string): string {
       worksheet.getCell(`A${currentRow + 5}`).value = `E-MAIL: ${pedido.email}`;
       worksheet.getCell(`A${currentRow + 5}`).font = { bold: true };
 
+          // Formatar a data prazoEntrega
+      const prazoEntrega = pedido.prazoEntrega;
+      const ano = prazoEntrega.substring(0, 4);
+      const mes = prazoEntrega.substring(4, 6);
+      const dia = prazoEntrega.substring(6, 8);
+      const prazoEntregaFormatado = `${dia}/${mes}/${ano}`;
 
-      worksheet.getCell(`A${currentRow + 6}`).value = `PRAZO DE ENTREGA: ${pedido.prazoEntrega}`;
+
+      worksheet.getCell(`A${currentRow + 6}`).value = `PRAZO DE ENTREGA: ${prazoEntregaFormatado}`;
       worksheet.getCell(`A${currentRow + 6}`).font = { bold: true };
       worksheet.getCell(`A${currentRow + 7}`).value = `PRAZO DE PAGAMENTO: ${pedido.prazoPagamento}`;
       worksheet.getCell(`A${currentRow + 7}`).font = { bold: true };
@@ -316,13 +320,13 @@ base64UrlDecode(base64Url: string): string {
       totalDescontoCellD.font = { bold: true, color: { argb: 'FFFFFFFF' } };
       totalDescontoCellD.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF000080' } };
       totalDescontoCellD.alignment = { vertical: 'middle', horizontal: 'right' };
-      
+            
       const totalDescontoCellE = worksheet.getCell(`F${totalRow + 1}`);
       totalDescontoCellE.value = `R$ ${pedido.totalDesconto.toFixed(2)}`;
       totalDescontoCellE.font = { bold: true, color: { argb: '0000000' } };
       totalDescontoCellE.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
       totalDescontoCellE.alignment = { vertical: 'middle', horizontal: 'center' };
-      
+            
 
       worksheet.addRow([]);
       worksheet.addRow([]);

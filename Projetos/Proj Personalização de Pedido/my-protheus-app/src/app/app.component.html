@@ -21,7 +21,7 @@
     
         <div *ngIf="!isLoading" class="table-containers">
             <div *ngFor="let pedido of pedidos" class="card">
-                <h3>Nº {{ pedido.numero }}</h3>
+                <h3>Nº {{ pedido.numero }}   <br>Vendedor : {{ pedido.codVendedor }} - {{ pedido.vendedor }}</h3>
                 <div class="flex-order">
                     <div class="client-info">
                         <table class="horizontal-table">
@@ -69,6 +69,10 @@
                 <div class="total-section">
                     TOTAL DO PEDIDO: R$ {{ pedido.totalPedido.toFixed(2) }}
                 </div>
+                <div class="total-desconto">
+                    TOTAL C/DESCONTO : R$ {{ pedido.totalDesconto }}
+                </div>
+                
             </div>
         </div>
     

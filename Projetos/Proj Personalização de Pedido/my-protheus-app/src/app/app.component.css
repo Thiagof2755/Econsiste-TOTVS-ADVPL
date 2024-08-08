@@ -194,7 +194,12 @@ button:hover {
     padding-top: 10px;
     font-weight: bold;
 }
-
+.total-desconto {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    font-weight: bold;
+}
 
 .btn-filter{
     position: fixed;

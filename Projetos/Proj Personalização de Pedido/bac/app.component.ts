@@ -20,6 +20,7 @@ interface Produto {
 
 interface DecodedToken {
   userid: string;
+  // Adicione outros campos que você espera no token, se necessário
 }
 
 interface Pedido {
@@ -38,7 +39,6 @@ interface Pedido {
   obs: string;
   totalDesconto: number;
 }
-
 
 @Component({
   selector: 'app-root',
@@ -61,20 +61,18 @@ export class AppComponent implements OnInit {
   isLoading = false;
   tokenx: string | null;
 
-
-  // Injete o serviço no construtor
   constructor(private http: HttpClient, public dialog: MatDialog) {
-    this.tokenx = sessionStorage.getItem("ERPTOKEN"); // Obtenha o token da sessionStorage
+    this.tokenx = sessionStorage.getItem("ERPTOKEN");
   }
 
   ngOnInit() {
-    this.openFilterDialog(); // Abra o filtro
+    this.openFilterDialog();
   }
 
   openFilterDialog(): void {
     const dialogRef = this.dialog.open(FilterDialogComponent, {
       width: '300px',
-      disableClose: true // Desabilita o fechamento ao clicar fora do diálogo
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -84,25 +82,20 @@ export class AppComponent implements OnInit {
     });
   }
 
-//**************************************DECODE TOKEN************************************ */
-
-base64UrlDecode(base64Url: string): string {
-    // Substitua os caracteres não padrão do Base64 URL
+  base64UrlDecode(base64Url: string): string {
     let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    // Adicione o padding se necessário
     switch (base64.length % 4) {
       case 0:
-        break; // No padding needed
+        break;
       case 2:
         base64 += '==';
-        break; // Pad to 4 bytes
+        break;
       case 3:
         base64 += '=';
-        break; // Pad to 4 bytes
+        break;
       default:
         throw new Error('Illegal base64url string!');
     }
-    // Decodifique base64 para UTF-8
     return atob(base64);
   }
 
@@ -116,56 +109,46 @@ base64UrlDecode(base64Url: string): string {
     const decodedPayload = this.base64UrlDecode(payload);
     
     return JSON.parse(decodedPayload);
-}
-
+  }
 
   fetchPedidos(filter: { vendedorDe: string, vendedorate: string, dataDe: string, dataAte: string ,pedidoDe: string, pedidoAte: string}) {
     this.isLoading = true;
 
-    // Obtenha os dados da sessionStorage
     const proBranch = sessionStorage.getItem("ProBranch");
     const Dtoken = sessionStorage.getItem("ERPTOKEN");
     let usuario: string | null = null;
 
-  // Parseie o token para obter o access_token
-  const tokenObj = Dtoken ? JSON.parse(Dtoken) : null;
-  const accessToken = tokenObj ? tokenObj.access_token : '';
-  if (accessToken) {
-    try {
-      const decodedToken = this.decodeJwtToken(accessToken);
-      usuario = decodedToken.userid;
-      console.log('Token decodificado:', decodedToken);
-    } catch (error) {
-      usuario = 'Erro ao decodificar o token:';
-      console.error('Erro ao decodificar o token:', error);
-  }
-}
+    const tokenObj = Dtoken ? JSON.parse(Dtoken) : null;
+    const accessToken = tokenObj ? tokenObj.access_token : '';
+    if (accessToken) {
+      try {
+        const decodedToken = this.decodeJwtToken(accessToken);
+        usuario = decodedToken.userid;
+        console.log('Token decodificado:', decodedToken);
+      } catch (error) {
+        usuario = 'Erro ao decodificar o token:';
+        console.error('Erro ao decodificar o token:', error);
+      }
+    }
   
-    // Adicione a filial como um parâmetro de consulta
-    const filial = proBranch || '{"Code":"XX"}'; // Usa a filial
-
-
-
-    //const url = `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
-    const url =  `http://192.168.55.235:8970/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
-   // const url = `http://127.0.0.1:8080/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
-
-    // Adicione os cabeçalhos com o token
+    const filial = proBranch || '{"Code":"XX"}';
+    const url = `http://localhost:3000/ConsultarPedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${accessToken}`
     });
-    console.log('Token:', accessToken);
-    console.log('URL:', url);
 
-    // Faça a requisição com os cabeçalhos
-    this.http.get<{ ConsultarPedidos: Pedido[] }>(url, { headers }).pipe(
+    this.http.get<Pedido[]>(url, { headers }).pipe(
       tap(response => {
         console.log('Response:', response);
       })
     ).subscribe(
       response => {
-        this.pedidos = response.ConsultarPedidos;
-        console.log('Pedidos:', this.pedidos);
+        if (response) {
+          this.pedidos = response;
+          console.log('Pedidos:', this.pedidos);
+        } else {
+          console.error('Response is undefined or null');
+        }
         this.isLoading = false;
       },
       error => {
@@ -174,25 +157,26 @@ base64UrlDecode(base64Url: string): string {
       }
     );
   }
+
   getTotalCaixas() {
     const totais: { [key: string]: number } = {};
 
-    this.pedidos.forEach(pedido => {
-      pedido.produtos.forEach(produto => {
-        if (!totais[produto.descricao]) {
-          totais[produto.descricao] = 0;
-        }
-        totais[produto.descricao] += produto.caixas;
+    if (this.pedidos) {
+      this.pedidos.forEach(pedido => {
+        pedido.produtos.forEach(produto => {
+          if (!totais[produto.descricao]) {
+            totais[produto.descricao] = 0;
+          }
+          totais[produto.descricao] += produto.caixas;
+        });
       });
-    });
+    }
 
     return Object.keys(totais).map(key => ({
       descricao: key,
       total: totais[key]
     }));
   }
-
-
   async exportToExcel() {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Pedidos');
