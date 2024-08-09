@@ -37,6 +37,7 @@ interface Pedido {
   prazoPagamento: string;
   obs: string;
   totalDesconto: number;
+  percentualdesconto: number;
 }
 
 
@@ -64,7 +65,10 @@ export class AppComponent implements OnInit {
 
   // Injete o serviço no construtor
   constructor(private http: HttpClient, public dialog: MatDialog) {
-    this.tokenx = sessionStorage.getItem("ERPTOKEN"); // Obtenha o token da sessionStorage
+    this.tokenx = sessionStorage.getItem("ERPTOKEN") || "TESTE"; // Obtenha o token da sessionStorage
+    //this.testeurl =  `http://192.158.15.108:8080/rest/REESTPED/consultar/Pedidos?vendedorDe=000000&vendedorate=zzzzzz&dataDe=20210101&dataAte=20250101&filial=&pedidoDe=000000&pedidoAte=zzzzzz&usuario=zzzzz`;
+    
+  
   }
 
   ngOnInit() {
@@ -147,7 +151,7 @@ base64UrlDecode(base64Url: string): string {
 
 
     //const url = `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}`;
-    const url =  `http://192.168.55.235:8970/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
+    const url =  `http://192.168.55.235:8996/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
    // const url = `http://127.0.0.1:8080/rest/REESTPED/consultar/Pedidos?vendedorDe=${filter.vendedorDe}&vendedorate=${filter.vendedorate}&dataDe=${filter.dataDe}&dataAte=${filter.dataAte}&filial=${filial}&pedidoDe=${filter.pedidoDe}&pedidoAte=${filter.pedidoAte}&usuario=${usuario}`;
 
     // Adicione os cabeçalhos com o token
@@ -253,6 +257,8 @@ base64UrlDecode(base64Url: string): string {
       worksheet.getCell(`A${currentRow + 7}`).font = { bold: true };
       worksheet.getCell(`A${currentRow + 8}`).value = `OBS: ${pedido.obs}`;
       worksheet.getCell(`A${currentRow + 8}`).font = { bold: true };
+      worksheet.getCell(`A${currentRow + 9}`).value = `Descontos: ${pedido.percentualdesconto}%`;
+      worksheet.getCell(`A${currentRow + 9}`).font = { bold: true };
 
       const productHeaderRow = currentRow;
       worksheet.getCell(`B${productHeaderRow}`).value = 'CAIXAS';
